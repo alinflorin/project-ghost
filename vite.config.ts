@@ -61,10 +61,9 @@ export default () => {
       cors: true,
       strictPort: true,
       host: '0.0.0.0',
-      port: 8080,
+      port: 3000,
     },
   };
-  // if (command !== 'serve') {
   config.plugins.push(
     VitePWA({
       minify: true,
@@ -76,9 +75,6 @@ export default () => {
         cleanupOutdatedCaches: true,
         globDirectory: 'dist/',
         navigateFallbackDenylist: [
-          new RegExp('^/api'),
-          new RegExp('^/signalr'),
-          new RegExp('^/config'),
         ],
         globPatterns: [
           '**/*.{json,js,html,jpg,png,svg,css,ico,woff,woff2,ttf,otf,etf,gif,tiff,cur,ani,jpeg,webmanifest,manifest}',
@@ -90,6 +86,5 @@ export default () => {
       },
     })
   );
-  // }
   return defineConfig(config);
 };
