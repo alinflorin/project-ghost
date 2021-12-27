@@ -1,0 +1,99 @@
+name: project-ghost
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+    branches: [develop]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: setup nodejs
+        uses: actions/setup-node@v2.3.0
+        with:
+          node-version: "16.x"
+
+      - name: cache node_modules
+        uses: actions/cache@v2
+        id: cache-nodemodules
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ github.workflow }}-${{ secrets.CACHE_VERSION }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ github.workflow }}-${{ secrets.CACHE_VERSION }}-
+
+      - name: npm install
+        run: npm ci
+
+      - name: npm build
+        run: npm run build
+
+      - name: upload ui artifact
+        uses: actions/upload-artifact@v2.2.4
+        if: ${{ success() && github.event_name != 'pull_request' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master') }}
+        with:
+          name: dist
+          path: ./dist
+
+  deploy_stg:
+    if: ${{ success() && github.event_name != 'pull_request' && github.ref == 'refs/heads/develop' }}
+    runs-on: ubuntu-latest
+    needs: [build]
+    environment: stg
+    name: deploy stg
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+    
+      - name: download ui artifact
+        uses: actions/download-artifact@v2.0.10
+        with:
+          name: "dist"
+          path: ./dist
+
+      - name: firebase deploy
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting:stg
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          
+  deploy_prod:
+    if: ${{ success() && github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    needs: [build]
+    environment: prod
+    name: deploy prod
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+    
+      - name: download ui artifact
+        uses: actions/download-artifact@v2.0.10
+        with:
+          name: "dist"
+          path: ./dist
+
+      - name: firebase deploy
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
