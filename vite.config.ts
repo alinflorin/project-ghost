@@ -12,7 +12,6 @@ const manifest: any = {
   theme_color: '#1d3461',
   background_color: '#ebebeb',
   orientation: 'portrait-primary',
-  categories: ['productivity', 'business', 'utilities'],
   scope: '/',
   icons: [
     {
