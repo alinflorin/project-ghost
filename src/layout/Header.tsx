@@ -37,8 +37,8 @@ export const Header = () => {
               src="/images/logo.svg"
               alt="Logo"
               style={{
-                width: "45px",
-                height: "45px",
+                height: "100%",
+                marginRight: "1rem",
               }}
             />
           </Link>
@@ -161,8 +161,8 @@ export const Header = () => {
 
   return (
     <CommandBar
-      style={{ minWidth: "220px", height: "45px" }}
-      styles={{ root: { height: "45px", paddingLeft: "0", paddingRight: "0" } }}
+      style={{ height: "50px" }}
+      styles={{ root: { height: "50px", paddingLeft: "0", paddingRight: "0" } }}
       items={items}
       farItems={_farItems}
     />
