@@ -2,7 +2,11 @@ import {
   CommandBar,
   ContextualMenuItemType,
   ICommandBarItemProps,
+  Persona,
+  PersonaPresence,
+  PersonaSize,
 } from "@fluentui/react";
+import { MoreVerticalIcon } from "@fluentui/react-icons-mdl2";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -14,6 +18,16 @@ import useSubjectState from "../hooks/useSubjectState";
 import { logout } from "../services/firebase";
 import { updateUserPreferences } from "../services/user-preferences";
 import HeaderStore from "./header-store";
+
+const getInitials = (n: string | null) => {
+  if (n == null || n.length === 0) {
+    return "U";
+  }
+  return n
+    .split(" ")
+    .map((x) => x[0].toUpperCase())
+    .join("");
+};
 
 export const Header = () => {
   const { isMobile } = useResponsive();
@@ -113,7 +127,21 @@ export const Header = () => {
     const ddMenu: ICommandBarItemProps = {
       key: "more",
       iconOnly: true,
-      iconProps: { iconName: "MoreVertical" },
+      onRenderIcon: () => (
+        <>
+          {user == null && <MoreVerticalIcon />}{" "}
+          {user != null && (
+            <Persona
+              imageUrl={user.photoURL || undefined}
+              imageInitials={getInitials(user.displayName)}
+              text={user.displayName || undefined}
+              size={PersonaSize.size40}
+              presence={PersonaPresence.online}
+              hidePersonaDetails={true}
+            />
+          )}
+        </>
+      ),
       buttonStyles: {
         menuIcon: {
           display: "none",

@@ -1,8 +1,8 @@
 export const theme = {
 	defaultFontStyle: {
 		fontFamily:
-			"'Share Tech Mono', 'Segoe UI Regular EastEuropean', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif",
-		fontWeight: 'regular',
+			"'Syne Mono', 'Segoe UI Regular EastEuropean', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif",
+		fontWeight: 'regular'
 	},
 	palette: {
 		themePrimary: '#8b993a',
