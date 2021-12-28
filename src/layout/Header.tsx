@@ -1,18 +1,13 @@
-import {
-  CommandBar,
-  ContextualMenuItemType,
-  FontIcon,
-  ICommandBarItemProps,
-  Toggle,
-  useTheme,
-} from "@fluentui/react";
-import React, { useCallback, useMemo } from "react";
+import { CommandBar, ICommandBarItemProps, useTheme } from "@fluentui/react";
+import { useCallback, useMemo } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";
 
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
+import { firebaseAuth } from "../services/firebase";
 import HeaderStore from "./header-store";
 
 export const Header = () => {
@@ -24,7 +19,7 @@ export const Header = () => {
   const theme = useTheme();
   const logoutClick = useCallback(async () => {}, []);
 
-  const user = null;
+  const [user] = useAuthState(firebaseAuth);
 
   const items: ICommandBarItemProps[] = useMemo(() => {
     const _items: ICommandBarItemProps[] = [
@@ -36,8 +31,9 @@ export const Header = () => {
               src="/images/logo.svg"
               alt="Logo"
               style={{
-                width: "48px",
-                height: "48px",
+                height: "100%",
+                marginLeft: "2px",
+                marginRight: "2px",
               }}
             />
           </Link>
@@ -63,7 +59,7 @@ export const Header = () => {
         checked: location.pathname === "/dashboard",
       });
     }
-    return isMobile
+    return isMobile && user != null
       ? [
           {
             key: "menuicon",
@@ -162,9 +158,9 @@ export const Header = () => {
     <>
       {i18n.isInitialized && (
         <CommandBar
-          style={{ minWidth: "220px", height: "48px" }}
+          style={{ minWidth: "200px" }}
           styles={{
-            root: { height: "48px", paddingLeft: "0", paddingRight: "0" },
+            root: { paddingLeft: "0", paddingRight: "0" },
           }}
           items={items}
           farItems={_farItems}

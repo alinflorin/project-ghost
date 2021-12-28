@@ -1,14 +1,22 @@
 import { Separator, Stack, ThemeProvider } from "@fluentui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./app/Dashboard";
+import ForgotPassword from "./app/ForgotPassword";
 import Home from "./app/Home";
+import Login from "./app/Login";
+import Signup from "./app/Signup";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
 import SideNav from "./layout/SideNav";
 import ToastZone from "./shared/toast/ToastZone";
 import theme from "./theme";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { firebaseAuth } from "./services/firebase";
+import PrivateRoute from "./helpers/PrivateRoute";
 
 export const App = () => {
+  const [user] = useAuthState(firebaseAuth);
+
   return (
     <ThemeProvider applyTo="body" theme={theme} style={{ height: "100%" }}>
       <BrowserRouter>
@@ -23,9 +31,7 @@ export const App = () => {
             horizontal={true}
             styles={{ root: { width: "100%", height: "100%", minHeight: "0" } }}
           >
-            <Stack>
-              <SideNav />
-            </Stack>
+            <Stack>{user && <SideNav />}</Stack>
 
             <Stack
               verticalFill={true}
@@ -40,7 +46,17 @@ export const App = () => {
               >
                 <Routes>
                   <Route index element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <PrivateRoute>
+                        <Dashboard />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
                 </Routes>
               </Stack>
             </Stack>

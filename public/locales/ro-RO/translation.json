@@ -7,6 +7,45 @@
             "login": "Login",
             "home": "Acasă",
             "language": "Limbă"
+        },
+        "login": {
+            "loginWithEmailAndPassword": "Login cu email și parolă",
+            "email": "Email",
+            "password": "Parolă",
+            "login": "Login",
+            "forgotPassword": "Am uitat parola",
+            "noAccountSignUp": "Fără cont? Înregistrare",
+            "loginWithSocial": "Login cu rețea socială",
+            "invalidEmail": "Email invalid",
+            "emailRequired": "Email-ul este obligatoriu",
+            "passwordTooShort": "Parola prea scurtă, min. {{chars}} caractere",
+            "passwordRequired": "Parola este obligatorie",
+            "passwordRecoveryEmailSent": "Email-ul de recuperare a parolei a fost trimis"
+        },
+        "forgotPassword": {
+            "sendRecoveryEmail": "Trimite email de recuperare",
+            "backToLogin": "Înapoi la login",
+            "email": "Email",
+            "forgotPassword": "Parolă uitată",
+            "emailRequired": "Email-ul este obligatoriu",
+            "invalidEmail": "Email invalid"
+        },
+        "signup": {
+            "email": "Email",
+            "password": "Parolă",
+            "signup": "Înregistrare",
+            "emailRequired": "Email-ul este obligatoriu",
+            "invalidEmail": "Email-ul este invalid",
+            "passwordTooShort": "Parola este prea scurtă, trebuie minim {{chars}} caractere",
+            "alreadyHaveAccountLogin": "Aveți deja un cont? Logați-vă aici",
+            "passwordConfirmation": "Confirmare parolă",
+            "passwordsMustMatch": "Parolele nu se potrivesc",
+            "firstName": "Prenume",
+            "lastName": "Nume",
+            "firstNameRequired": "Prenumele este obligatoriu",
+            "lastNameRequired": "Numele este obligatoriu",
+            "passwordRequired": "Parola este obligatorie",
+            "passwordConfirmationRequired": "Confirmarea parolei este obligatorie"
         }
     }
 }

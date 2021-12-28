@@ -74,6 +74,7 @@ export default () => {
         cleanupOutdatedCaches: true,
         globDirectory: 'dist/',
         navigateFallbackDenylist: [
+          new RegExp('^/__'),
         ],
         globPatterns: [
           '**/*.{json,js,html,jpg,png,svg,css,ico,woff,woff2,ttf,otf,etf,gif,tiff,cur,ani,jpeg,webmanifest,manifest}',
