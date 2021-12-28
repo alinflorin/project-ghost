@@ -1,13 +1,18 @@
-import { CommandBar, ICommandBarItemProps, useTheme } from "@fluentui/react";
+import {
+  CommandBar,
+  ContextualMenuItemType,
+  ICommandBarItemProps,
+} from "@fluentui/react";
 import { useCallback, useMemo } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";
+import { useAuth } from "../hooks/useAuth";
 
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
-import { firebaseAuth } from "../services/firebase";
+import useUserPreferences from "../hooks/useUserPreferences";
+import { logout } from "../services/firebase";
 import HeaderStore from "./header-store";
 
 export const Header = () => {
@@ -16,10 +21,12 @@ export const Header = () => {
   const router = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
-  const theme = useTheme();
-  const logoutClick = useCallback(async () => {}, []);
+  const [user] = useAuth();
 
-  const [user] = useAuthState(firebaseAuth);
+  const logoutClick = useCallback(async () => {
+    await logout();
+    router("/login");
+  }, [router]);
 
   const items: ICommandBarItemProps[] = useMemo(() => {
     const _items: ICommandBarItemProps[] = [
@@ -39,26 +46,16 @@ export const Header = () => {
           </Link>
         ),
       },
-    ];
-    if (user == null) {
-      _items.push({
+      {
         key: "home",
         text: t("ui.header.home"),
         iconProps: { iconName: "HomeSolid" },
         onClick: () => router("/"),
         canCheck: true,
         checked: location.pathname === "/",
-      });
-    } else {
-      _items.push({
-        key: "dashboard",
-        text: t("ui.header.dashboard"),
-        iconProps: { iconName: "ViewDashboard" },
-        onClick: () => router("/dashboard"),
-        canCheck: true,
-        checked: location.pathname === "/dashboard",
-      });
-    }
+      },
+    ];
+
     return isMobile && user != null
       ? [
           {
@@ -84,13 +81,16 @@ export const Header = () => {
     headerState.isNavOpen,
   ]);
 
+  const { preferences, setPreferences } = useUserPreferences();
+
   const changeLanguage = useCallback(
     (langCode: string) => {
       (async () => {
         await i18n.changeLanguage(langCode);
+        await setPreferences({ ...preferences, language: langCode });
       })();
     },
-    [i18n]
+    [i18n, setPreferences, preferences]
   );
 
   const _farItems: ICommandBarItemProps[] = useMemo(() => {
@@ -106,8 +106,6 @@ export const Header = () => {
         canCheck: true,
         checked: location.pathname === "/login",
       });
-    } else {
-      // TODO
     }
 
     const ddMenu: ICommandBarItemProps = {
@@ -141,6 +139,31 @@ export const Header = () => {
       },
     };
 
+    if (user != null) {
+      ddMenu.subMenuProps!.items = [
+        {
+          key: "user_id",
+          text: user.displayName!,
+          iconProps: { iconName: "UserOptional" },
+          disabled: false,
+          itemType: ContextualMenuItemType.Header,
+        },
+        ...ddMenu.subMenuProps!.items,
+      ];
+
+      ddMenu.subMenuProps!.items = [
+        ...ddMenu.subMenuProps!.items,
+        {
+          key: "logout",
+          text: t("ui.header.logout"),
+          iconProps: { iconName: "FollowUser" },
+          onClick: () => {
+            logoutClick();
+          },
+        },
+      ];
+    }
+
     items.push(ddMenu);
     return items;
   }, [
@@ -151,14 +174,12 @@ export const Header = () => {
     i18n.language,
     changeLanguage,
     logoutClick,
-    theme,
   ]);
 
   return (
     <>
       {i18n.isInitialized && (
         <CommandBar
-          style={{ minWidth: "200px" }}
           styles={{
             root: { paddingLeft: "0", paddingRight: "0" },
           }}

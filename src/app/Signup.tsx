@@ -13,10 +13,13 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import * as yup from "yup";
+import { addErrorsToFormState } from "../helpers/form-state";
 
 import RouterLink from "../helpers/router-link";
 import { useQueryParams } from "../hooks/useQueryParams";
 import useResponsive from "../hooks/useResponsive";
+import { SignupRequest } from "../models/signup-request";
+import { signup } from "../services/firebase";
 
 const inputStyles: Partial<ITextFieldStyles> = {
   root: {
@@ -32,18 +35,18 @@ const schema = yup.object().shape({
   password1: yup
     .string()
     .required("ui.signup.passwordRequired")
-    .min(8, "ui.signup.passwordTooShort"),
+    .min(6, "ui.signup.passwordTooShort"),
   password2: yup
     .string()
     .required("ui.signup.passwordConfirmationRequired")
-    .min(8, "ui.signup.passwordTooShort")
+    .min(6, "ui.signup.passwordTooShort")
     .oneOf([yup.ref("password1")], "ui.signup.passwordsMustMatch"),
   firstName: yup.string().required("ui.signup.firstNameRequired"),
   lastName: yup.string().required("ui.signup.lastNameRequired"),
 });
 
 export const Signup = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { control, handleSubmit, formState, setError } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
@@ -62,18 +65,18 @@ export const Signup = () => {
   }
 
   const onSubmit = useCallback(
-    async (request: any) => {
+    async (request: SignupRequest) => {
       setIsLoading(true);
       try {
-        request.languageCode = i18n.language;
-        request.returnTo = returnTo;
+        await signup(request);
         setIsLoading(false);
-        router("/login?message=ui.login.accountCreatedPleaseActivate");
+        router("/login?message=ui.login.accountCreatedPleaseLogin");
       } catch (err) {
         setIsLoading(false);
+        addErrorsToFormState(setError, err);
       }
     },
-    [setIsLoading, router, i18n, setError, returnTo]
+    [setIsLoading, router, setError, returnTo]
   );
 
   return (
@@ -132,7 +135,7 @@ export const Signup = () => {
                 required={true}
                 tabIndex={2}
                 value={value ? value : ""}
-                errorMessage={t(error?.message!, { chars: 8 })}
+                errorMessage={t(error?.message!, { chars: 6 })}
                 canRevealPassword
                 type="password"
                 iconProps={{ iconName: "PasswordField" }}
@@ -155,7 +158,7 @@ export const Signup = () => {
                 tabIndex={3}
                 required={true}
                 value={value ? value : ""}
-                errorMessage={t(error?.message!, { chars: 8 })}
+                errorMessage={t(error?.message!, { chars: 6 })}
                 canRevealPassword
                 type="password"
                 iconProps={{ iconName: "PasswordField" }}

@@ -1,18 +1,20 @@
 import { useEffect } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useLocation, useNavigate } from "react-router-dom";
-import { firebaseAuth } from "../services/firebase";
+import { useAuth } from "../hooks/useAuth";
 
 export const PrivateRoute = ({ children }: any) => {
-  const [user] = useAuthState(firebaseAuth);
+  const [user, loading] = useAuth();
   const location = useLocation();
   const router = useNavigate();
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
     if (user === null) {
       router("/login?returnTo=" + encodeURIComponent(location.pathname));
     }
-  }, [user]);
+  }, [user, loading]);
   return user ? children : <></>;
 };
 

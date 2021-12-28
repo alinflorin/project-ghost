@@ -16,6 +16,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import * as yup from "yup";
+import { addErrorsToFormState } from "../helpers/form-state";
 
 import RouterLink from "../helpers/router-link";
 import useQueryParams from "../hooks/useQueryParams";
@@ -51,11 +52,11 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required("ui.login.passwordRequired")
-    .min(8, "ui.login.passwordTooShort"),
+    .min(6, "ui.login.passwordTooShort"),
 });
 
 export const Login = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { control, handleSubmit, formState, setError, getValues, clearErrors } =
     useForm({
       resolver: yupResolver(schema),
@@ -95,7 +96,7 @@ export const Login = () => {
         }
       } catch (err) {
         setIsLoading(false);
-        console.log(err);
+        addErrorsToFormState(setError, err);
       }
     },
     [router, setIsLoading, returnTo, setError]
@@ -114,7 +115,7 @@ export const Login = () => {
         }
       } catch (err) {
         setIsLoading(false);
-        console.log(err);
+        addErrorsToFormState(setError, err);
       }
     },
     [router, setIsLoading, returnTo, setError]
@@ -130,7 +131,7 @@ export const Login = () => {
 
       setMessages(() => ["ui.login.activationEmailSent"]);
     } catch (err) {}
-  }, [setMessages, getValues, clearErrors, i18n, setError]);
+  }, [setMessages, getValues, clearErrors, setError]);
 
   return (
     <Stack verticalFill={true}>
@@ -203,7 +204,7 @@ export const Login = () => {
                 tabIndex={2}
                 onBlur={onBlur}
                 value={value ? value : ""}
-                errorMessage={t(error?.message!, { chars: 8 })}
+                errorMessage={t(error?.message!, { chars: 6 })}
                 canRevealPassword
                 type="password"
                 iconProps={{ iconName: "PasswordField" }}

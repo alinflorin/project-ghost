@@ -1,12 +1,25 @@
 {
     "ui": {
+        "errors": {
+            "unknown": "Eroare necunoscută",
+            "firebase": {
+                "auth/wrong-password": "Parola greșită",
+                "auth/user-not-found": "Utilizator necunoscut",
+                "auth/weak-password": "Parolă slabă",
+                "auth/user-disabled": "Utilizator dezactivat",
+                "auth/too-many-requests": "Prea multe încercări eșuate",
+                "auth/email-already-in-use": "Email-ul este deja folosit"
+            }
+        },
         "nav": {
             "dashboard": "Panou"
         },
         "header": {
             "login": "Login",
             "home": "Acasă",
-            "language": "Limbă"
+            "language": "Limbă",
+            "dashboard": "Panou",
+            "logout": "Logout"
         },
         "login": {
             "loginWithEmailAndPassword": "Login cu email și parolă",
@@ -20,7 +33,8 @@
             "emailRequired": "Email-ul este obligatoriu",
             "passwordTooShort": "Parola prea scurtă, min. {{chars}} caractere",
             "passwordRequired": "Parola este obligatorie",
-            "passwordRecoveryEmailSent": "Email-ul de recuperare a parolei a fost trimis"
+            "passwordRecoveryEmailSent": "Email-ul de recuperare a parolei a fost trimis",
+            "accountCreatedPleaseLogin": "Cont creat. Vă rugăm să vă autentificați"
         },
         "forgotPassword": {
             "sendRecoveryEmail": "Trimite email de recuperare",
