@@ -12,6 +12,7 @@ import { useAuth } from "../hooks/useAuth";
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
 import { logout } from "../services/firebase";
+import { updateUserPreferences } from "../services/user-preferences";
 import HeaderStore from "./header-store";
 
 export const Header = () => {
@@ -84,9 +85,14 @@ export const Header = () => {
     (langCode: string) => {
       (async () => {
         await i18n.changeLanguage(langCode);
+        if (user != null) {
+          await updateUserPreferences(user.email!, {
+            language: langCode,
+          });
+        }
       })();
     },
-    [i18n]
+    [i18n, user]
   );
 
   const _farItems: ICommandBarItemProps[] = useMemo(() => {

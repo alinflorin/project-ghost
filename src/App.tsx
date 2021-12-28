@@ -11,8 +11,35 @@ import SideNav from "./layout/SideNav";
 import ToastZone from "./shared/toast/ToastZone";
 import theme from "./theme";
 import PrivateRoute from "./helpers/PrivateRoute";
+import { useAuth } from "./hooks/useAuth";
+import { useEffect, useRef } from "react";
+import { getUserPreferences } from "./services/user-preferences";
+import { useTranslation } from "react-i18next";
 
 export const App = () => {
+  const [user, userLoading] = useAuth();
+  const preferencesApplied = useRef(false);
+  const [t, i18n] = useTranslation();
+
+  useEffect(() => {
+    if (preferencesApplied.current) {
+      return;
+    }
+    if (userLoading) {
+      return;
+    }
+    if (user == null) {
+      return;
+    }
+    (async () => {
+      const up = await getUserPreferences(user.email!);
+      if (up != null && up.language != null && up.language !== i18n.language) {
+        await i18n.changeLanguage(up.language);
+      }
+    })();
+    preferencesApplied.current = true;
+  }, [preferencesApplied, user, userLoading, i18n]);
+
   return (
     <ThemeProvider applyTo="body" theme={theme} style={{ height: "100%" }}>
       <BrowserRouter>

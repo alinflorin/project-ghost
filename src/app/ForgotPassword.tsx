@@ -13,9 +13,12 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import * as yup from "yup";
+import { addErrorsToFormState } from "../helpers/form-state";
 
 import RouterLink from "../helpers/router-link";
 import useResponsive from "../hooks/useResponsive";
+import { ResetPasswordRequest } from "../models/reset-password-request";
+import { sendResetEmail } from "../services/firebase";
 
 const inputStyles: Partial<ITextFieldStyles> = {
   root: {
@@ -43,13 +46,15 @@ export const ForgotPassword = () => {
   const { isMobile, isLargeOrHigher } = useResponsive();
 
   const onSubmit = useCallback(
-    async (request: any) => {
+    async (request: ResetPasswordRequest) => {
       setIsLoading(true);
       try {
+        await sendResetEmail(request);
         setIsLoading(false);
         router("/login?message=ui.login.passwordRecoveryEmailSent");
       } catch (err) {
         setIsLoading(false);
+        addErrorsToFormState(setError, err);
       }
     },
     [router, setIsLoading, setError, i18n]

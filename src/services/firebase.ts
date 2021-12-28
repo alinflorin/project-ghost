@@ -3,14 +3,16 @@ import { initializeApp } from 'firebase/app';
 import {
     AuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup,
     GoogleAuthProvider, FacebookAuthProvider, OAuthProvider, signOut, createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
     updateProfile
 } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
-import { collection, doc, DocumentReference, getFirestore, setDoc, WithFieldValue } from 'firebase/firestore';
+import { collection, doc, DocumentReference, getFirestore, setDoc, WithFieldValue, getDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { LoginRequest } from '../models/login-request';
 import { SocialAccountType } from '../models/social-account-type';
 import { SignupRequest } from '../models/signup-request';
+import { ResetPasswordRequest } from '../models/reset-password-request';
 
 
 export const firebaseApp = initializeApp(environment.firebase);
@@ -49,6 +51,12 @@ export const loginWithSocialAccount = async (type: SocialAccountType) => {
     return await signInWithPopup(firebaseAuth, provider);
 };
 
+export const sendResetEmail = async (dto: ResetPasswordRequest) => {
+    await sendPasswordResetEmail(firebaseAuth, dto.email, {
+        url: window.location.origin + '/login?message=ui.login.passwordWasReset'
+    });
+};
+
 export const logout = async () => {
     await signOut(firebaseAuth);
 };
@@ -57,10 +65,14 @@ export const getCollection = (collectionName: string) => {
     return collection(firebaseFirestore, collectionName);
 };
 
-export const getDocument = (path: string) => {
+export const getDocumentRef = (path: string) => {
     return doc(firebaseFirestore, path);
 };
 
 export const upsertDocument = async <T>(ref: DocumentReference<T>, data: WithFieldValue<T>) => {
     setDoc(ref, data);
+};
+
+export const getDocument = async (path: string) => {
+    return await getDoc(getDocumentRef(path));
 };

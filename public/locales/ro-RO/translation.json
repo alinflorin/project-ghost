@@ -8,7 +8,9 @@
                 "auth/weak-password": "Parolă slabă",
                 "auth/user-disabled": "Utilizator dezactivat",
                 "auth/too-many-requests": "Prea multe încercări eșuate",
-                "auth/email-already-in-use": "Email-ul este deja folosit"
+                "auth/email-already-in-use": "Email-ul este deja folosit",
+                "auth/popup-closed-by-user": "Login anulat",
+                "auth/cancelled-popup-request": "Login anulat"
             }
         },
         "nav": {
@@ -34,7 +36,8 @@
             "passwordTooShort": "Parola prea scurtă, min. {{chars}} caractere",
             "passwordRequired": "Parola este obligatorie",
             "passwordRecoveryEmailSent": "Email-ul de recuperare a parolei a fost trimis",
-            "accountCreatedPleaseLogin": "Cont creat. Vă rugăm să vă autentificați"
+            "accountCreatedPleaseLogin": "Cont creat. Vă rugăm să vă autentificați",
+            "passwordWasReset": "Parola a fost resetată"
         },
         "forgotPassword": {
             "sendRecoveryEmail": "Trimite email de recuperare",
