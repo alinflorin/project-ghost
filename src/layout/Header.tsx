@@ -133,7 +133,7 @@ export const Header = () => {
           {user != null && (
             <Persona
               imageUrl={user.photoURL || undefined}
-              imageInitials={getInitials(user.displayName)}
+              imageInitials={getInitials(user!.displayName)}
               text={user.displayName || undefined}
               size={PersonaSize.size40}
               presence={PersonaPresence.online}
