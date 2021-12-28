@@ -36,8 +36,8 @@ export const Header = () => {
               src="/images/logo.svg"
               alt="Logo"
               style={{
-                width: "48px",
-                height: "48px",
+                height: "100%",
+                marginRight: "2px",
               }}
             />
           </Link>
@@ -162,9 +162,9 @@ export const Header = () => {
     <>
       {i18n.isInitialized && (
         <CommandBar
-          style={{ minWidth: "220px", height: "48px" }}
+          style={{ minWidth: "200px" }}
           styles={{
-            root: { height: "48px", paddingLeft: "0", paddingRight: "0" },
+            root: { paddingLeft: "0", paddingRight: "0" },
           }}
           items={items}
           farItems={_farItems}
