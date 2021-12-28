@@ -1,11 +1,13 @@
 import { CommandBar, ICommandBarItemProps, useTheme } from "@fluentui/react";
 import { useCallback, useMemo } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";
 
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
+import { firebaseAuth } from "../services/firebase";
 import HeaderStore from "./header-store";
 
 export const Header = () => {
@@ -17,7 +19,7 @@ export const Header = () => {
   const theme = useTheme();
   const logoutClick = useCallback(async () => {}, []);
 
-  const user = null;
+  const [user] = useAuthState(firebaseAuth);
 
   const items: ICommandBarItemProps[] = useMemo(() => {
     const _items: ICommandBarItemProps[] = [
@@ -57,7 +59,7 @@ export const Header = () => {
         checked: location.pathname === "/dashboard",
       });
     }
-    return isMobile
+    return isMobile && user != null
       ? [
           {
             key: "menuicon",

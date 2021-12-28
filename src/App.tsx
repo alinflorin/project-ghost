@@ -10,8 +10,12 @@ import Header from "./layout/Header";
 import SideNav from "./layout/SideNav";
 import ToastZone from "./shared/toast/ToastZone";
 import theme from "./theme";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { firebaseAuth } from "./services/firebase";
 
 export const App = () => {
+  const [user] = useAuthState(firebaseAuth);
+
   return (
     <ThemeProvider applyTo="body" theme={theme} style={{ height: "100%" }}>
       <BrowserRouter>
@@ -26,9 +30,7 @@ export const App = () => {
             horizontal={true}
             styles={{ root: { width: "100%", height: "100%", minHeight: "0" } }}
           >
-            <Stack>
-              <SideNav />
-            </Stack>
+            <Stack>{user && <SideNav />}</Stack>
 
             <Stack
               verticalFill={true}
