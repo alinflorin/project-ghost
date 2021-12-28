@@ -4,6 +4,7 @@ export const environment = {
         { code: 'en-US', name: 'English' },
         { code: 'ro-RO', name: 'Română' },
     ],
+    defaultLanguage: 'en-US',
     firebase: {
         apiKey: "AIzaSyBBlm1FykI_UPgn3LVuPSiIgRMfkh8Nh3c",
         authDomain: "project-ghost-af.firebaseapp.com",
