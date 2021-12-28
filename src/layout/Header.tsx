@@ -11,7 +11,6 @@ import { useAuth } from "../hooks/useAuth";
 
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
-import useUserPreferences from "../hooks/useUserPreferences";
 import { logout } from "../services/firebase";
 import HeaderStore from "./header-store";
 
@@ -81,16 +80,13 @@ export const Header = () => {
     headerState.isNavOpen,
   ]);
 
-  const { preferences, setPreferences } = useUserPreferences();
-
   const changeLanguage = useCallback(
     (langCode: string) => {
       (async () => {
         await i18n.changeLanguage(langCode);
-        await setPreferences({ ...preferences, language: langCode });
       })();
     },
-    [i18n, setPreferences, preferences]
+    [i18n]
   );
 
   const _farItems: ICommandBarItemProps[] = useMemo(() => {
