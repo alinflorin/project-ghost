@@ -12,6 +12,7 @@ import ToastZone from "./shared/toast/ToastZone";
 import theme from "./theme";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./services/firebase";
+import PrivateRoute from "./helpers/PrivateRoute";
 
 export const App = () => {
   const [user] = useAuthState(firebaseAuth);
@@ -45,7 +46,14 @@ export const App = () => {
               >
                 <Routes>
                   <Route index element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <PrivateRoute>
+                        <Dashboard />
+                      </PrivateRoute>
+                    }
+                  />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
