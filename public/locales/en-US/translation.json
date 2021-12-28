@@ -19,7 +19,16 @@
             "invalidEmail": "Invalid email",
             "emailRequired": "Email is required",
             "passwordTooShort": "Password is too short, min. {{chars}} characters",
-            "passwordRequired": "Password is required"
+            "passwordRequired": "Password is required",
+            "passwordRecoveryEmailSent": "Password recovery email sent"
+        },
+        "forgotPassword": {
+            "sendRecoveryEmail": "Send recovery email",
+            "backToLogin": "Back to login",
+            "email": "Email",
+            "forgotPassword": "Forgot password",
+            "emailRequired": "Email required",
+            "invalidEmail": "Invalid email"
         },
         "signup": {
             "email": "Email",

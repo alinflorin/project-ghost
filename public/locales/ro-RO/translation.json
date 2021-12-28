@@ -19,7 +19,16 @@
             "invalidEmail": "Email invalid",
             "emailRequired": "Email-ul este obligatoriu",
             "passwordTooShort": "Parola prea scurtă, min. {{chars}} caractere",
-            "passwordRequired": "Parola este obligatorie"
+            "passwordRequired": "Parola este obligatorie",
+            "passwordRecoveryEmailSent": "Email-ul de recuperare a parolei a fost trimis"
+        },
+        "forgotPassword": {
+            "sendRecoveryEmail": "Trimite email de recuperare",
+            "backToLogin": "Înapoi la login",
+            "email": "Email",
+            "forgotPassword": "Parolă uitată",
+            "emailRequired": "Email-ul este obligatoriu",
+            "invalidEmail": "Email invalid"
         },
         "signup": {
             "email": "Email",

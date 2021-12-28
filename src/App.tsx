@@ -1,6 +1,7 @@
 import { Separator, Stack, ThemeProvider } from "@fluentui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./app/Dashboard";
+import ForgotPassword from "./app/ForgotPassword";
 import Home from "./app/Home";
 import Login from "./app/Login";
 import Signup from "./app/Signup";
@@ -45,6 +46,7 @@ export const App = () => {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
                 </Routes>
               </Stack>
             </Stack>
