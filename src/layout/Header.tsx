@@ -1,12 +1,5 @@
-import {
-  CommandBar,
-  ContextualMenuItemType,
-  FontIcon,
-  ICommandBarItemProps,
-  Toggle,
-  useTheme,
-} from "@fluentui/react";
-import React, { useCallback, useMemo } from "react";
+import { CommandBar, ICommandBarItemProps, useTheme } from "@fluentui/react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";

@@ -7,6 +7,36 @@
             "login": "Login",
             "home": "Home",
             "language": "Language"
+        },
+        "login": {
+            "loginWithEmailAndPassword": "Login with email and password",
+            "email": "Email",
+            "password": "Password",
+            "login": "Login",
+            "forgotPassword": "Forgot password",
+            "noAccountSignUp": "No account? Sign up",
+            "loginWithSocial": "Login with social network",
+            "invalidEmail": "Invalid email",
+            "emailRequired": "Email is required",
+            "passwordTooShort": "Password is too short, min. {{chars}} characters",
+            "passwordRequired": "Password is required"
+        },
+        "signup": {
+            "email": "Email",
+            "password": "Password",
+            "signup": "Signup",
+            "emailRequired": "Email is required",
+            "invalidEmail": "Email is invalid",
+            "passwordTooShort": "Password is too short, should be at least {{chars}} characters",
+            "alreadyHaveAccountLogin": "Already have an account? Login here",
+            "passwordConfirmation": "Password confirmation",
+            "passwordsMustMatch": "Passwords must match",
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "firstNameRequired": "First Name is required",
+            "lastNameRequired": "Last Name is required",
+            "passwordRequired": "Password is required",
+            "passwordConfirmationRequired": "Password confirmation is required"
         }
     }
 }

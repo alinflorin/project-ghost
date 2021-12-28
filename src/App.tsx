@@ -2,6 +2,8 @@ import { Separator, Stack, ThemeProvider } from "@fluentui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./app/Dashboard";
 import Home from "./app/Home";
+import Login from "./app/Login";
+import Signup from "./app/Signup";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
 import SideNav from "./layout/SideNav";
@@ -41,6 +43,8 @@ export const App = () => {
                 <Routes>
                   <Route index element={<Home />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
                 </Routes>
               </Stack>
             </Stack>
