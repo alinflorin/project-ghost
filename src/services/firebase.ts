@@ -72,7 +72,9 @@ export const getDocumentRef = (path: string) => {
 };
 
 export const upsertDocument = async <T>(ref: DocumentReference<T>, data: WithFieldValue<T>) => {
-    setDoc(ref, data);
+    setDoc(ref, data, {
+        merge: true
+    });
 };
 
 export const getDocument = async (path: string) => {

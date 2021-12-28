@@ -15,6 +15,10 @@ import { useAuth } from "./hooks/useAuth";
 import { useEffect, useRef } from "react";
 import { getUserPreferences } from "./services/user-preferences";
 import { useTranslation } from "react-i18next";
+import { useInterval } from "./hooks/useInterval";
+import { updateProfile, updateProfileLastSeen } from "./services/profile";
+import { serverTimestamp } from "firebase/firestore";
+import { environment } from "./environment";
 
 export const App = () => {
   const [user, userLoading] = useAuth();
@@ -39,6 +43,32 @@ export const App = () => {
     })();
     preferencesApplied.current = true;
   }, [preferencesApplied, user, userLoading, i18n]);
+
+  const sentInitialUpdate = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (user == null || userLoading || sentInitialUpdate.current) {
+      return;
+    }
+    sentInitialUpdate.current = true;
+    (async () => {
+      await updateProfile(user.email!, {
+        displayName: user.displayName,
+        email: user.email,
+        lastSeen: serverTimestamp(),
+        photo: user.photoURL,
+      } as any);
+    })();
+  }, [user, userLoading, sentInitialUpdate]);
+
+  useInterval(() => {
+    if (userLoading || user == null) {
+      return;
+    }
+    (async () => {
+      await updateProfileLastSeen(user.email!);
+    })();
+  }, environment.heartbeat);
 
   return (
     <ThemeProvider applyTo="body" theme={theme} style={{ height: "100%" }}>
