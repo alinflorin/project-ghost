@@ -20,6 +20,12 @@ import * as yup from "yup";
 import RouterLink from "../helpers/router-link";
 import useQueryParams from "../hooks/useQueryParams";
 import useResponsive from "../hooks/useResponsive";
+import { LoginRequest } from "../models/login-request";
+import { SocialAccountType } from "../models/social-account-type";
+import {
+  loginWithEmailAndPassword,
+  loginWithSocialAccount,
+} from "../services/firebase";
 
 const inputStyles: Partial<ITextFieldStyles> = {
   root: {
@@ -77,9 +83,10 @@ export const Login = () => {
   const { isMobile, isLargeOrHigher } = useResponsive();
 
   const onSubmit = useCallback(
-    async (request: any) => {
+    async (request: LoginRequest) => {
       setIsLoading(true);
       try {
+        await loginWithEmailAndPassword(request);
         setIsLoading(false);
         if (returnTo != null) {
           router(returnTo);
@@ -88,6 +95,26 @@ export const Login = () => {
         }
       } catch (err) {
         setIsLoading(false);
+        console.log(err);
+      }
+    },
+    [router, setIsLoading, returnTo, setError]
+  );
+
+  const socialLoginClick = useCallback(
+    async (type: SocialAccountType) => {
+      setIsLoading(true);
+      try {
+        await loginWithSocialAccount(type);
+        setIsLoading(false);
+        if (returnTo != null) {
+          router(returnTo);
+        } else {
+          router("/dashboard");
+        }
+      } catch (err) {
+        setIsLoading(false);
+        console.log(err);
       }
     },
     [router, setIsLoading, returnTo, setError]
@@ -230,16 +257,19 @@ export const Login = () => {
               tabIndex={6}
               styles={socialImageStyles}
               src="/images/google.png"
+              onClick={() => socialLoginClick(SocialAccountType.Google)}
             />
             <Image
               tabIndex={7}
               styles={socialImageStyles}
               src="/images/facebook.png"
+              onClick={() => socialLoginClick(SocialAccountType.Facebook)}
             />
             <Image
               tabIndex={8}
               styles={socialImageStyles}
               src="/images/microsoft.png"
+              onClick={() => socialLoginClick(SocialAccountType.Microsoft)}
             />
           </Stack>
         </Stack>
