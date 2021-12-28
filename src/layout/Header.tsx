@@ -22,7 +22,6 @@ export const Header = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-
   const logoutClick = useCallback(async () => {}, []);
 
   const user = null;
@@ -37,8 +36,8 @@ export const Header = () => {
               src="/images/logo.svg"
               alt="Logo"
               style={{
-                height: "100%",
-                marginRight: "1rem",
+                width: "48px",
+                height: "48px",
               }}
             />
           </Link>
@@ -160,12 +159,18 @@ export const Header = () => {
   ]);
 
   return (
-    <CommandBar
-      style={{ height: "50px" }}
-      styles={{ root: { height: "50px", paddingLeft: "0", paddingRight: "0" } }}
-      items={items}
-      farItems={_farItems}
-    />
+    <>
+      {i18n.isInitialized && (
+        <CommandBar
+          style={{ minWidth: "220px", height: "48px" }}
+          styles={{
+            root: { height: "48px", paddingLeft: "0", paddingRight: "0" },
+          }}
+          items={items}
+          farItems={_farItems}
+        />
+      )}
+    </>
   );
 };
 export default Header;
