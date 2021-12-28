@@ -6,7 +6,7 @@ import {
     sendPasswordResetEmail,
     updateProfile
 } from 'firebase/auth';
-import { getAnalytics } from 'firebase/analytics';
+import { getAnalytics, initializeAnalytics } from 'firebase/analytics';
 import { collection, doc, DocumentReference, getFirestore, setDoc, WithFieldValue, getDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { LoginRequest } from '../models/login-request';
@@ -16,6 +16,8 @@ import { ResetPasswordRequest } from '../models/reset-password-request';
 
 
 export const firebaseApp = initializeApp(environment.firebase);
+
+initializeAnalytics(firebaseApp);
 export const firebaseAuth = getAuth(firebaseApp);
 export const firebaseFirestore = getFirestore(firebaseApp);
 export const firebaseAnalytics = getAnalytics(firebaseApp);
