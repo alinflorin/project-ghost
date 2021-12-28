@@ -37,6 +37,7 @@ export const Header = () => {
               alt="Logo"
               style={{
                 height: "100%",
+                marginLeft: "2px",
                 marginRight: "2px",
               }}
             />
