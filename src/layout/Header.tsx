@@ -7,11 +7,14 @@ import {
   PersonaSize,
 } from "@fluentui/react";
 import { MoreVerticalIcon } from "@fluentui/react-icons-mdl2";
+import { Timestamp } from "firebase/firestore";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";
+import { isOnline } from "../helpers/is-online";
 import { useAuth } from "../hooks/useAuth";
+import useProfile from "../hooks/useProfile";
 
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
@@ -36,7 +39,8 @@ export const Header = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const [user] = useAuth();
-  const [userPreferences, setUserPreferences] = useUserPreferences();
+  const [_, setUserPreferences] = useUserPreferences(true);
+  const [profile] = useProfile();
 
   const logoutClick = useCallback(async () => {
     await logout();
@@ -136,7 +140,7 @@ export const Header = () => {
               text={user.displayName || undefined}
               size={PersonaSize.size40}
               presence={
-                userPreferences?.disableLastSeen
+                !isOnline(profile?.lastSeen)
                   ? PersonaPresence.offline
                   : PersonaPresence.online
               }
@@ -207,7 +211,7 @@ export const Header = () => {
     i18n.language,
     changeLanguage,
     logoutClick,
-    userPreferences,
+    profile,
   ]);
 
   return (

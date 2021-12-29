@@ -1,6 +1,8 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Profile {
     id?: string;
-    lastSeen?: Date;
+    lastSeen?: Timestamp;
     email?: string;
     displayName?: string;
     photo?: string;
