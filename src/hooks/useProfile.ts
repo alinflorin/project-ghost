@@ -3,10 +3,16 @@ import { useAuth } from './useAuth';
 import { getDocumentRef, upsertDocument } from '../services/firebase';
 import { useCallback } from 'react';
 import { Profile } from '../models/profile';
-export const useProfile = (): [Profile | null, (profile: Partial<Profile>) => Promise<void>, boolean] => {
+export const useProfile = (skipLoading = false): [Profile | null, (profile: Partial<Profile>) => Promise<void>, boolean] => {
     const [user, userLoading] = useAuth();
-    const [doc, docLoading] = useDocumentData(user == null ? null : getDocumentRef(`profiles/${user?.email}`));
+    let doc = null;
+    let docLoading = false;
 
+    if (!skipLoading) {
+        const result = useDocumentData(user == null ? null : getDocumentRef(`profiles/${user?.email}`));
+        doc = result[0];
+        docLoading = result[1];
+    }
     const setProfile = useCallback(async (profile: Partial<Profile>) => {
         if (user == null) {
             return;

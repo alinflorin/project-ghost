@@ -12,16 +12,55 @@ import ToastZone from "./shared/toast/ToastZone";
 import theme from "./theme";
 import PrivateRoute from "./helpers/PrivateRoute";
 import { useTranslation } from "react-i18next";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import useUserPreferences from "./hooks/useUserPreferences";
 import useProfile from "./hooks/useProfile";
+import { useInterval } from "./hooks/useInterval";
+import { environment } from "./environment";
+import { useAuth } from "./hooks/useAuth";
+import { serverTimestamp } from "firebase/firestore";
 
 export const App = () => {
   const [t, i18n] = useTranslation();
   const initialPreferencesLoaded = useRef<boolean>(false);
   const [userPreferences, _, userPreferencesLoading] = useUserPreferences();
+  const [user, userLoading] = useAuth();
 
-  const [profile, setProfile] = useProfile();
+  const [__, setProfile] = useProfile(true);
+  const initialProfileUpdateSent = useRef<boolean>(false);
+
+  const heartbeat = useCallback(async () => {
+    if (userLoading || userPreferencesLoading || user == null) {
+      return false;
+    }
+    await setProfile({
+      displayName: user.displayName || undefined,
+      email: user.email || undefined,
+      lastSeen: userPreferences?.disableLastSeen
+        ? null
+        : (serverTimestamp() as any),
+      photo: user.photoURL || undefined,
+    });
+    return true;
+  }, [setProfile, userPreferences, userPreferencesLoading, user, userLoading]);
+
+  useEffect(() => {
+    if (initialProfileUpdateSent.current) {
+      return;
+    }
+    (async () => {
+      const result = await heartbeat();
+      if (result) {
+        initialProfileUpdateSent.current = true;
+      }
+    })();
+  }, [heartbeat, initialProfileUpdateSent]);
+
+  useInterval(() => {
+    (async () => {
+      await heartbeat();
+    })();
+  }, environment.heartbeat);
 
   useEffect(() => {
     if (initialPreferencesLoaded.current || userPreferencesLoading) {
