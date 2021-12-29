@@ -54,9 +54,6 @@ function openPushNotification(event) {
 
           // Focus existing window
           client.focus();
-
-          // Avoid opening a new window
-          var noMatch = true;
         }
       }
 
