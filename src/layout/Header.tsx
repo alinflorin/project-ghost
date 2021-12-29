@@ -12,7 +12,6 @@ import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";
-import { isOnline } from "../helpers/is-online";
 import { useAuth } from "../hooks/useAuth";
 import useProfile from "../hooks/useProfile";
 
@@ -140,7 +139,7 @@ export const Header = () => {
               text={user.displayName || undefined}
               size={PersonaSize.size40}
               presence={
-                !isOnline(profile?.lastSeen)
+                profile?.lastSeen == null
                   ? PersonaPresence.offline
                   : PersonaPresence.online
               }
