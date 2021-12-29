@@ -6,7 +6,7 @@ import {
   Text,
 } from "@fluentui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
@@ -24,14 +24,14 @@ export const Settings = () => {
   const [userPreferences, setUserPreferences, userPreferencesLoading] =
     useUserPreferences();
 
-  const { control, handleSubmit, formState, setError, reset } = useForm({
+  const { control, handleSubmit, formState, setError, setValue } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
   });
 
   const formValuesSet = useRef<boolean>(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       formValuesSet.current ||
       userPreferencesLoading ||
@@ -39,11 +39,9 @@ export const Settings = () => {
     ) {
       return;
     }
-    reset({
-      disableLastSeen: userPreferences.disableLastSeen,
-    });
+    setValue("disableLastSeen", userPreferences.disableLastSeen || false);
     formValuesSet.current = true;
-  }, [userPreferences, userPreferencesLoading, formValuesSet, reset]);
+  }, [userPreferences, userPreferencesLoading, formValuesSet, setValue]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -51,7 +49,6 @@ export const Settings = () => {
     async (payload: Partial<UserPreferences>) => {
       setIsLoading(true);
       try {
-        console.log(payload);
         await setUserPreferences(payload);
         setIsLoading(false);
       } catch (err) {
@@ -88,10 +85,9 @@ export const Settings = () => {
                 label={t("ui.settings.disableLastSeen")}
                 onChange={async (e) => {
                   onChange(e);
-                  onBlur();
                   await handleSubmit(onSubmit)();
                 }}
-                checked={value}
+                checked={value || false}
               />
             )}
           />
