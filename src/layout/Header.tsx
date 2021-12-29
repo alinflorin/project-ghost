@@ -210,7 +210,7 @@ export const Header = () => {
       {i18n.isInitialized && (
         <CommandBar
           styles={{
-            root: { paddingLeft: "0", paddingRight: "0" },
+            root: { paddingLeft: "0", paddingRight: "0", paddingTop: "2px" },
           }}
           items={items}
           farItems={_farItems}
