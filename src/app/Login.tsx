@@ -134,7 +134,8 @@ export const Login = () => {
   }, [setMessages, getValues, clearErrors, setError]);
 
   const formStyle = useMemo(() => {
-    const rule = isMobile ? "100%" : isLargeOrHigher ? "25%" : "50%";
+    const isLarge = isLargeOrHigher ? "25%" : "50%";
+    const rule = isMobile ? "100%" : isLarge;
     return { width: rule };
   }, [isMobile, isLargeOrHigher]);
 
