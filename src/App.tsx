@@ -10,7 +10,7 @@ import Header from "./layout/Header";
 import SideNav from "./layout/SideNav";
 import ToastZone from "./shared/toast/ToastZone";
 import theme from "./theme";
-import PrivateRoute from "./helpers/PrivateRoute";
+import PrivateRoute from "./shared/private-route/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useRef } from "react";
 import useUserPreferences from "./hooks/useUserPreferences";
