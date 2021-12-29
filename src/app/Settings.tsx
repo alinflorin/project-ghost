@@ -4,14 +4,15 @@ import {
   MessageBarType,
   Stack,
   Text,
-  TextField,
 } from "@fluentui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { addErrorsToFormState } from "../helpers/form-state";
+import useUserPreferences from "../hooks/useUserPreferences";
+import { UserPreferences } from "../models/user-preferences";
 
 const schema = yup.object().shape({
   disableLastSeen: yup.boolean(),
@@ -19,22 +20,47 @@ const schema = yup.object().shape({
 
 export const Settings = () => {
   const { t, i18n } = useTranslation();
-  const { control, handleSubmit, formState, setError } = useForm({
+
+  const [userPreferences, setUserPreferences, userPreferencesLoading] =
+    useUserPreferences();
+
+  const { control, handleSubmit, formState, setError, reset } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
   });
 
+  const formValuesSet = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (
+      formValuesSet.current ||
+      userPreferencesLoading ||
+      userPreferences == null
+    ) {
+      return;
+    }
+    reset({
+      disableLastSeen: userPreferences.disableLastSeen,
+    });
+    formValuesSet.current = true;
+  }, [userPreferences, userPreferencesLoading, formValuesSet, reset]);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSubmit = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      addErrorsToFormState(setError, err);
-    }
-  }, [setIsLoading, setError, i18n]);
+  const onSubmit = useCallback(
+    async (payload: Partial<UserPreferences>) => {
+      setIsLoading(true);
+      try {
+        console.log(payload);
+        await setUserPreferences(payload);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        addErrorsToFormState(setError, err);
+      }
+    },
+    [setIsLoading, setError, i18n, setUserPreferences]
+  );
 
   return (
     <Stack verticalFill={true}>
@@ -58,8 +84,13 @@ export const Settings = () => {
             name="disableLastSeen"
             render={({ field: { onChange, onBlur, value } }) => (
               <Checkbox
+                disabled={isLoading}
                 label={t("ui.settings.disableLastSeen")}
-                onChange={onChange}
+                onChange={async (e) => {
+                  onChange(e);
+                  onBlur();
+                  await handleSubmit(onSubmit)();
+                }}
                 checked={value}
               />
             )}
