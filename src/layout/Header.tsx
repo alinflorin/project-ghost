@@ -138,7 +138,7 @@ export const Header = () => {
               text={user.displayName || undefined}
               size={PersonaSize.size40}
               presence={
-                profileLoading || profile?.lastSeen == null
+                !profileLoading && profile?.lastSeen == null
                   ? PersonaPresence.offline
                   : PersonaPresence.online
               }
