@@ -9,7 +9,11 @@ export const useProfile = (skipLoading = false): [Profile | null, (profile: Part
     let docLoading = false;
 
     if (!skipLoading) {
-        const result = useDocumentData(user == null ? null : getDocumentRef(`profiles/${user?.email}`));
+        const result = useDocumentData(user == null ? null : getDocumentRef(`profiles/${user?.email}`), {
+            snapshotOptions: {
+                serverTimestamps: 'estimate'
+            }
+        });
         doc = result[0];
         docLoading = result[1];
     }

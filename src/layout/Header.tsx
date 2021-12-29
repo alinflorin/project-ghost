@@ -7,7 +7,7 @@ import {
   PersonaSize,
 } from "@fluentui/react";
 import { MoreVerticalIcon } from "@fluentui/react-icons-mdl2";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { environment } from "../environment";
