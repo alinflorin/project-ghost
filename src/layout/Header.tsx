@@ -15,8 +15,8 @@ import { useAuth } from "../hooks/useAuth";
 
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
+import useUserPreferences from "../hooks/useUserPreferences";
 import { logout } from "../services/firebase";
-import { updateUserPreferences } from "../services/user-preferences";
 import HeaderStore from "./header-store";
 
 const getInitials = (n: string | null) => {
@@ -36,6 +36,7 @@ export const Header = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const [user] = useAuth();
+  const [_, setUserPreferences] = useUserPreferences();
 
   const logoutClick = useCallback(async () => {
     await logout();
@@ -99,14 +100,12 @@ export const Header = () => {
     (langCode: string) => {
       (async () => {
         await i18n.changeLanguage(langCode);
-        if (user != null) {
-          await updateUserPreferences(user.email!, {
-            language: langCode,
-          });
-        }
+        await setUserPreferences({
+          language: langCode,
+        });
       })();
     },
-    [i18n, user]
+    [i18n, setUserPreferences]
   );
 
   const _farItems: ICommandBarItemProps[] = useMemo(() => {
