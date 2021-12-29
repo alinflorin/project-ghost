@@ -23,8 +23,8 @@ const getMessageBarType = (severity: ToastSeverity): MessageBarType => {
       return MessageBarType.success;
     case ToastSeverity.Error:
       return MessageBarType.error;
-    default:
     case ToastSeverity.Info:
+    default:
       return MessageBarType.info;
   }
 };

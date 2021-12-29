@@ -44,8 +44,9 @@ export const loginWithSocialAccount = async (type: SocialAccountType) => {
         case SocialAccountType.Microsoft:
             provider = new OAuthProvider('microsoft.com');
             break;
-        default:
+
         case SocialAccountType.Google:
+        default:
             provider = new GoogleAuthProvider();
             break;
     }

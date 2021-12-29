@@ -80,7 +80,8 @@ export const Signup = () => {
   );
 
   const formStyle = useMemo(() => {
-    return { width: isMobile ? "100%" : isLargeOrHigher ? "25%" : "50%" };
+    const rule = isMobile ? "100%" : isLargeOrHigher ? "25%" : "50%";
+    return { width: rule };
   }, [isMobile, isLargeOrHigher]);
 
   return (
