@@ -19,6 +19,7 @@ import { useInterval } from "./hooks/useInterval";
 import { environment } from "./environment";
 import { useAuth } from "./hooks/useAuth";
 import { serverTimestamp } from "firebase/firestore";
+import Settings from "./app/Settings";
 
 export const App = () => {
   const [t, i18n] = useTranslation();
@@ -102,6 +103,14 @@ export const App = () => {
                     element={
                       <PrivateRoute>
                         <Dashboard />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <PrivateRoute>
+                        <Settings />
                       </PrivateRoute>
                     }
                   />

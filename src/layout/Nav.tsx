@@ -49,6 +49,13 @@ export const Nav = (props: NavProps) => {
             forceAnchor: true,
             icon: "ViewDashboard",
           },
+          {
+            name: t("ui.nav.settings"),
+            url: "/settings",
+            key: "/settings",
+            forceAnchor: true,
+            icon: "Settings",
+          },
         ],
       },
     ];

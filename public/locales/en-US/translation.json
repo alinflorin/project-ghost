@@ -1,5 +1,9 @@
 {
     "ui": {
+        "settings": {
+            "settings": "Settings",
+            "disableLastSeen": "Disable Last Seen"
+        },
         "errors": {
             "unknown": "Unknown error",
             "firebase": {
@@ -14,7 +18,8 @@
             }
         },
         "nav": {
-            "dashboard": "Dashboard"
+            "dashboard": "Dashboard",
+            "settings": "Settings"
         },
         "header": {
             "login": "Login",
