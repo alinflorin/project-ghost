@@ -32,25 +32,25 @@ export const signup = async (dto: SignupRequest) => {
 };
 
 export const loginWithEmailAndPassword = async (dto: LoginRequest) => {
-    return await signInWithEmailAndPassword(firebaseAuth, dto.email, dto.password);
+    return signInWithEmailAndPassword(firebaseAuth, dto.email, dto.password);
 };
 
 export const loginWithSocialAccount = async (type: SocialAccountType) => {
     let provider: AuthProvider;
     switch (type) {
-        default:
-        case SocialAccountType.Google:
-            provider = new GoogleAuthProvider();
-            break;
         case SocialAccountType.Facebook:
             provider = new FacebookAuthProvider();
             break;
         case SocialAccountType.Microsoft:
             provider = new OAuthProvider('microsoft.com');
             break;
+        default:
+        case SocialAccountType.Google:
+            provider = new GoogleAuthProvider();
+            break;
     }
 
-    return await signInWithPopup(firebaseAuth, provider);
+    return signInWithPopup(firebaseAuth, provider);
 };
 
 export const sendResetEmail = async (dto: ResetPasswordRequest) => {
@@ -78,5 +78,5 @@ export const upsertDocument = async <T>(ref: DocumentReference<T>, data: WithFie
 };
 
 export const getDocument = async (path: string) => {
-    return await getDoc(getDocumentRef(path));
+    return getDoc(getDocumentRef(path));
 };

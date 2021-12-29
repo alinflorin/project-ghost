@@ -7,7 +7,6 @@ import {
   PersonaSize,
 } from "@fluentui/react";
 import { MoreVerticalIcon } from "@fluentui/react-icons-mdl2";
-import { Timestamp } from "firebase/firestore";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -112,10 +111,10 @@ export const Header = () => {
   );
 
   const _farItems: ICommandBarItemProps[] = useMemo(() => {
-    const items: ICommandBarItemProps[] = [];
+    const farItems: ICommandBarItemProps[] = [];
 
     if (user == null) {
-      items.push({
+      farItems.push({
         key: "login",
         text: t("ui.header.login"),
         iconOnly: false,
@@ -135,7 +134,7 @@ export const Header = () => {
           {user != null && (
             <Persona
               imageUrl={user.photoURL || undefined}
-              imageInitials={getInitials(user!.displayName)}
+              imageInitials={getInitials(user.displayName)}
               text={user.displayName || undefined}
               size={PersonaSize.size40}
               presence={
@@ -200,8 +199,8 @@ export const Header = () => {
       ];
     }
 
-    items.push(ddMenu);
-    return items;
+    farItems.push(ddMenu);
+    return farItems;
   }, [
     user,
     t,

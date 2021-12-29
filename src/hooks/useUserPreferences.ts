@@ -17,7 +17,7 @@ export const useUserPreferences = (skipLoading = false): [UserPreferences | null
         if (user == null) {
             return;
         }
-        await upsertDocument(getDocumentRef(`userPreferences/${user!.email}`), prefs);
+        await upsertDocument(getDocumentRef(`userPreferences/${user.email}`), prefs);
     }, [user]);
 
     return [

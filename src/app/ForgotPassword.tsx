@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@fluentui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -60,12 +60,16 @@ export const ForgotPassword = () => {
     [router, setIsLoading, setError, i18n]
   );
 
+  const formStyle = useMemo(() => {
+    return { width: isMobile ? "100%" : isLargeOrHigher ? "25%" : "50%" };
+  }, [isMobile, isLargeOrHigher]);
+
   return (
     <Stack verticalFill={true}>
       <form
         autoComplete="off"
         className="mx-auto my-auto"
-        style={{ width: isMobile ? "100%" : isLargeOrHigher ? "25%" : "50%" }}
+        style={formStyle}
         noValidate={true}
         onSubmit={handleSubmit(onSubmit)}
       >

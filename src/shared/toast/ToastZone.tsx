@@ -17,15 +17,15 @@ import ToastStore from "./toast-store";
 
 const getMessageBarType = (severity: ToastSeverity): MessageBarType => {
   switch (severity) {
-    default:
-    case ToastSeverity.Info:
-      return MessageBarType.info;
     case ToastSeverity.Warn:
       return MessageBarType.severeWarning;
     case ToastSeverity.Success:
       return MessageBarType.success;
     case ToastSeverity.Error:
       return MessageBarType.error;
+    default:
+    case ToastSeverity.Info:
+      return MessageBarType.info;
   }
 };
 

@@ -22,7 +22,7 @@ import { serverTimestamp } from "firebase/firestore";
 import Settings from "./app/Settings";
 
 export const App = () => {
-  const [t, i18n] = useTranslation();
+  const [___, i18n] = useTranslation();
   const initialPreferencesLoaded = useRef<boolean>(false);
   const [userPreferences, _, userPreferencesLoading] = useUserPreferences();
   const [user, userLoading] = useAuth();
@@ -44,17 +44,15 @@ export const App = () => {
     return true;
   }, [setProfile, userPreferences, userPreferencesLoading, user, userLoading]);
 
-  useEffect(() => {
+  const hbFunc = useCallback(() => {
     (async () => {
       await heartbeat();
     })();
   }, [heartbeat]);
 
-  useInterval(() => {
-    (async () => {
-      await heartbeat();
-    })();
-  }, environment.heartbeat);
+  useEffect(hbFunc, [heartbeat]);
+
+  useInterval(hbFunc, environment.heartbeat);
 
   useEffect(() => {
     if (initialPreferencesLoaded.current || userPreferencesLoading) {
@@ -62,7 +60,7 @@ export const App = () => {
     }
     if (userPreferences?.language != null) {
       (async () => {
-        await i18n.changeLanguage(userPreferences!.language!);
+        await i18n.changeLanguage(userPreferences.language);
       })();
     }
   }, [userPreferences, initialPreferencesLoaded, i18n, userPreferencesLoading]);

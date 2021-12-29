@@ -17,7 +17,7 @@ export const useProfile = (skipLoading = false): [Profile | null, (profile: Part
         if (user == null) {
             return;
         }
-        await upsertDocument(getDocumentRef(`profiles/${user!.email}`), profile);
+        await upsertDocument(getDocumentRef(`profiles/${user.email}`), profile);
     }, [user]);
 
     return [
