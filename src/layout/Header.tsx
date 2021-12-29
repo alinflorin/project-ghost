@@ -38,7 +38,7 @@ export const Header = () => {
   const { t, i18n } = useTranslation();
   const [user] = useAuth();
   const [_, setUserPreferences] = useUserPreferences(true);
-  const [profile] = useProfile();
+  const [profile, ___, profileLoading] = useProfile();
 
   const logoutClick = useCallback(async () => {
     await logout();
@@ -138,7 +138,7 @@ export const Header = () => {
               text={user.displayName || undefined}
               size={PersonaSize.size40}
               presence={
-                profile?.lastSeen == null
+                profileLoading || profile?.lastSeen == null
                   ? PersonaPresence.offline
                   : PersonaPresence.online
               }
