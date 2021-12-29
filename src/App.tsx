@@ -27,7 +27,6 @@ export const App = () => {
   const [user, userLoading] = useAuth();
 
   const [__, setProfile] = useProfile(true);
-  const initialProfileUpdateSent = useRef<boolean>(false);
 
   const heartbeat = useCallback(async () => {
     if (userLoading || userPreferencesLoading || user == null) {
@@ -45,16 +44,10 @@ export const App = () => {
   }, [setProfile, userPreferences, userPreferencesLoading, user, userLoading]);
 
   useEffect(() => {
-    if (initialProfileUpdateSent.current) {
-      return;
-    }
     (async () => {
-      const result = await heartbeat();
-      if (result) {
-        initialProfileUpdateSent.current = true;
-      }
+      await heartbeat();
     })();
-  }, [heartbeat, initialProfileUpdateSent]);
+  }, [heartbeat]);
 
   useInterval(() => {
     (async () => {

@@ -36,7 +36,7 @@ export const Header = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const [user] = useAuth();
-  const [_, setUserPreferences] = useUserPreferences();
+  const [userPreferences, setUserPreferences] = useUserPreferences();
 
   const logoutClick = useCallback(async () => {
     await logout();
@@ -135,7 +135,11 @@ export const Header = () => {
               imageInitials={getInitials(user!.displayName)}
               text={user.displayName || undefined}
               size={PersonaSize.size40}
-              presence={PersonaPresence.online}
+              presence={
+                userPreferences?.disableLastSeen
+                  ? PersonaPresence.offline
+                  : PersonaPresence.online
+              }
               hidePersonaDetails={true}
             />
           )}
@@ -203,6 +207,7 @@ export const Header = () => {
     i18n.language,
     changeLanguage,
     logoutClick,
+    userPreferences,
   ]);
 
   return (
