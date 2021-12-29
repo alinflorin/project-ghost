@@ -6,6 +6,12 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   sonarcloud:
     name: SonarCloud
