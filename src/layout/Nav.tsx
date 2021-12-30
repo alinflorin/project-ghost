@@ -50,6 +50,13 @@ export const Nav = (props: NavProps) => {
             icon: "ViewDashboard",
           },
           {
+            name: t("ui.nav.contacts"),
+            url: "/contacts",
+            key: "/contacts",
+            forceAnchor: true,
+            icon: "People",
+          },
+          {
             name: t("ui.nav.settings"),
             url: "/settings",
             key: "/settings",

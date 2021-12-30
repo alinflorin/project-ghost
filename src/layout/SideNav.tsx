@@ -1,5 +1,6 @@
 import { IPanel, Panel, PanelType, Stack } from "@fluentui/react";
 import React, { useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../hooks/useAuth";
 import useResponsive from "../hooks/useResponsive";
 import useSubjectState from "../hooks/useSubjectState";
@@ -11,6 +12,7 @@ export const SideNav = () => {
   const [user, loading] = useAuth();
   const { isMobile } = useResponsive();
   const [headerState, setHeaderState] = useSubjectState(HeaderStore);
+  const [t] = useTranslation();
 
   const dismissPanel = useCallback(() => {
     setHeaderState({
@@ -43,7 +45,7 @@ export const SideNav = () => {
                 },
               }}
               onDismiss={dismissPanel}
-              headerText="Menu"
+              headerText={t("ui.sidenav.menu")}
             >
               <Nav panelRef={panelRef.current} hasBorder={false} />
             </Panel>

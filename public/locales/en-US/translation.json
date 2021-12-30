@@ -19,7 +19,11 @@
         },
         "nav": {
             "dashboard": "Dashboard",
-            "settings": "Settings"
+            "settings": "Settings",
+            "contacts": "Contacte"
+        },
+        "sidenav": {
+            "menu": "Menu"
         },
         "header": {
             "login": "Login",
@@ -68,6 +72,11 @@
             "lastNameRequired": "Last Name is required",
             "passwordRequired": "Password is required",
             "passwordConfirmationRequired": "Password confirmation is required"
+        },
+        "contacts": {
+            "photo": "Photo",
+            "email": "Email",
+            "name": "Name"
         }
     }
 }

@@ -19,7 +19,11 @@
         },
         "nav": {
             "dashboard": "Panou",
-            "settings": "Setări"
+            "settings": "Setări",
+            "contacts": "Contacte"
+        },
+        "sidenav": {
+            "menu": "Meniu"
         },
         "header": {
             "login": "Login",
@@ -68,6 +72,11 @@
             "lastNameRequired": "Numele este obligatoriu",
             "passwordRequired": "Parola este obligatorie",
             "passwordConfirmationRequired": "Confirmarea parolei este obligatorie"
+        },
+        "contacts": {
+            "photo": "Foto",
+            "email": "Email",
+            "name": "Nume"
         }
     }
 }

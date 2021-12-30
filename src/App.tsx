@@ -20,6 +20,7 @@ import { environment } from "./environment";
 import { useAuth } from "./hooks/useAuth";
 import { serverTimestamp } from "firebase/firestore";
 import Settings from "./app/Settings";
+import Contacts from "./app/Contacts";
 
 export const App = () => {
   const [___, i18n] = useTranslation();
@@ -109,6 +110,14 @@ export const App = () => {
                     element={
                       <PrivateRoute>
                         <Settings />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/contacts"
+                    element={
+                      <PrivateRoute>
+                        <Contacts />
                       </PrivateRoute>
                     }
                   />
