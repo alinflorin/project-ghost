@@ -76,7 +76,8 @@
         "contacts": {
             "photo": "Photo",
             "email": "Email",
-            "name": "Name"
+            "name": "Name",
+            "contacts": "Contacts"
         }
     }
 }

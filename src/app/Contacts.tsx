@@ -16,6 +16,7 @@ import { isOnline } from "../helpers/is-online";
 import useSubjectState from "../hooks/useSubjectState";
 import HeaderStore from "../layout/header-store";
 import useResponsive from "../hooks/useResponsive";
+import { useTranslation } from "react-i18next";
 
 const getInitials = (n: string | null) => {
   if (n == null || n.length === 0) {
@@ -28,6 +29,7 @@ const getInitials = (n: string | null) => {
 };
 
 export const Contacts = () => {
+  const [t] = useTranslation();
   const [headerState] = useSubjectState(HeaderStore);
   const { isMobile } = useResponsive();
   const [user, userLoading] = useAuth();
@@ -72,7 +74,7 @@ export const Contacts = () => {
           columns={[
             {
               key: "email",
-              name: "email",
+              name: t("ui.contacts.contacts"),
               minWidth: 100,
               onRender: (data) => (
                 <Stack
