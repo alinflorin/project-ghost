@@ -79,7 +79,13 @@
             "name": "Name",
             "contacts": "Contacts",
             "add": "Add",
-            "delete": "Delete"
+            "delete": "Delete",
+            "addContact": "Add Contact",
+            "save": "Save",
+            "cancel": "Cancel",
+            "invalidEmail": "Invalid email",
+            "emailDoesntExist": "Email doesn't exist",
+            "contactAdded": "Contact added"
         }
     }
 }

@@ -79,7 +79,13 @@
             "name": "Nume",
             "contacts": "Contacte",
             "add": "Adăugare",
-            "delete": "Ștergere"
+            "delete": "Ștergere",
+            "addContact": "Adăugare contact",
+            "save": "Salvare",
+            "cancel": "Anulare",
+            "invalidEmail": "Email invalid",
+            "emailDoesntExist": "Email-ul nu există",
+            "contactAdded": "Contact adăugat"
         }
     }
 }

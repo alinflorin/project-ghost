@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import useWindowSize from "../hooks/useWindowSize";
 import { useCallback, useMemo, useState } from "react";
 import { Profile } from "../models/profile";
+import AddContact from "./AddContact";
 
 const getInitials = (n: string | null) => {
   if (n == null || n.length === 0) {
@@ -38,6 +39,7 @@ export const Contacts = () => {
   const [headerState] = useSubjectState(HeaderStore);
   const windowSize = useWindowSize();
   const [user, userLoading] = useAuth();
+  const [addContactVisible, setAddContactVisible] = useState(false);
   const [contactsEmails, contactEmailsLoading] = useCollectionData(
     userLoading || user == null
       ? null
@@ -82,12 +84,17 @@ export const Contacts = () => {
     );
   }, [selectedItems, user]);
 
+  const showAddContact = useCallback(() => {
+    setAddContactVisible(true);
+  }, [setAddContactVisible]);
+
   const commandItems = useMemo(() => {
     return [
       {
         key: "add",
         text: t("ui.contacts.add"),
         iconProps: { iconName: "Add" },
+        onClick: showAddContact,
       },
       {
         key: "delete",
@@ -99,69 +106,79 @@ export const Contacts = () => {
     ] as ICommandBarItemProps[];
   }, [t, i18n.language, selectedItems]);
 
-  console.log(selectedItems);
+  const addContactDismissed = useCallback(() => {
+    setAddContactVisible(false);
+  }, [setAddContactVisible]);
+
   return (
-    <Stack
-      style={{ position: "relative" }}
-      horizontal={false}
-      verticalFill={true}
-    >
-      <CommandBar items={commandItems} styles={{ root: { padding: 0 } }} />
+    <>
       <Stack
-        styles={{
-          root: { flex: "1 1 auto", minHeight: "0", overflow: "auto" },
-        }}
+        style={{ position: "relative" }}
         horizontal={false}
+        verticalFill={true}
       >
-        <ShimmeredDetailsList
-          key={headerState.isNavOpen + "_" + windowSize.width}
-          items={profiles == null ? [] : profiles}
-          enableShimmer={profilesLoading}
-          shimmerLines={10}
-          compact={false}
-          checkboxVisibility={CheckboxVisibility.always}
-          enableUpdateAnimations={true}
-          isHeaderVisible={false}
-          setKey="email"
-          checkboxCellClassName="fullCheckbox"
-          columns={[
-            {
-              key: "email",
-              name: "",
-              minWidth: 0,
-              onRender: (data) => (
-                <Stack
-                  horizontal={true}
-                  verticalAlign="center"
-                  horizontalAlign="start"
-                  tokens={{
-                    childrenGap: "1rem",
-                  }}
-                >
-                  <Persona
-                    imageUrl={data.photo || undefined}
-                    imageInitials={getInitials(data.displayName)}
-                    text={data.displayName || undefined}
-                    size={PersonaSize.size32}
-                    presence={
-                      isOnline(data?.lastSeen)
-                        ? PersonaPresence.online
-                        : PersonaPresence.offline
-                    }
-                    hidePersonaDetails={true}
-                  />
-                  <Stack horizontal={false}>
-                    <Text variant="large">{data.displayName}</Text>
-                    <Text variant="small">{data.email}</Text>
+        <CommandBar items={commandItems} styles={{ root: { padding: 0 } }} />
+        <Stack
+          styles={{
+            root: { flex: "1 1 auto", minHeight: "0", overflow: "auto" },
+          }}
+          horizontal={false}
+        >
+          <ShimmeredDetailsList
+            key={headerState.isNavOpen + "_" + windowSize.width}
+            items={profiles == null ? [] : profiles}
+            enableShimmer={profilesLoading}
+            shimmerLines={10}
+            compact={false}
+            checkboxVisibility={CheckboxVisibility.always}
+            enableUpdateAnimations={true}
+            isHeaderVisible={false}
+            setKey="email"
+            checkboxCellClassName="fullCheckbox"
+            columns={[
+              {
+                key: "email",
+                name: "",
+                minWidth: 0,
+                onRender: (data) => (
+                  <Stack
+                    horizontal={true}
+                    verticalAlign="center"
+                    horizontalAlign="start"
+                    tokens={{
+                      childrenGap: "1rem",
+                    }}
+                  >
+                    <Persona
+                      imageUrl={data.photo || undefined}
+                      imageInitials={getInitials(data.displayName)}
+                      text={data.displayName || undefined}
+                      size={PersonaSize.size32}
+                      presence={
+                        isOnline(data?.lastSeen)
+                          ? PersonaPresence.online
+                          : PersonaPresence.offline
+                      }
+                      hidePersonaDetails={true}
+                    />
+                    <Stack horizontal={false}>
+                      <Text variant="large">{data.displayName}</Text>
+                      <Text variant="small">{data.email}</Text>
+                    </Stack>
                   </Stack>
-                </Stack>
-              ),
-            },
-          ]}
-          selection={selection}
-        />
+                ),
+              },
+            ]}
+            selection={selection}
+          />
+        </Stack>
       </Stack>
-    </Stack>
+      <AddContact
+        user={user}
+        visible={addContactVisible}
+        onDismiss={addContactDismissed}
+      />
+    </>
   );
 };
 export default Contacts;
