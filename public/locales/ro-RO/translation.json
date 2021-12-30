@@ -74,9 +74,6 @@
             "passwordConfirmationRequired": "Confirmarea parolei este obligatorie"
         },
         "contacts": {
-            "photo": "Foto",
-            "email": "Email",
-            "name": "Nume",
             "contacts": "Contacte",
             "add": "Adăugare",
             "delete": "Ștergere",

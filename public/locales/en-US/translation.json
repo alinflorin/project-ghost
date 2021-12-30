@@ -74,9 +74,6 @@
             "passwordConfirmationRequired": "Password confirmation is required"
         },
         "contacts": {
-            "photo": "Photo",
-            "email": "Email",
-            "name": "Name",
             "contacts": "Contacts",
             "add": "Add",
             "delete": "Delete",
