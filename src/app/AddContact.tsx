@@ -47,10 +47,11 @@ export const AddContact = (props: AddContactProps) => {
   );
 
   const onDismiss = useCallback(() => {
+    setEmailError(undefined);
     if (props.onDismiss) {
       props.onDismiss();
     }
-  }, [props.onDismiss]);
+  }, [props.onDismiss, setEmailError]);
 
   const addContact = useCallback(async () => {
     const foundProfile = await getDocument(`profiles/${email}`);
