@@ -1,8 +1,11 @@
 import {
-  IconButton,
+  CheckboxVisibility,
+  CommandBar,
+  ICommandBarItemProps,
   Persona,
   PersonaPresence,
   PersonaSize,
+  Selection,
   SelectionMode,
   ShimmeredDetailsList,
   Stack,
@@ -11,12 +14,14 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { query, where } from "firebase/firestore";
-import { getCollection } from "../services/firebase";
+import { deleteDocument, getCollection } from "../services/firebase";
 import { isOnline } from "../helpers/is-online";
 import useSubjectState from "../hooks/useSubjectState";
 import HeaderStore from "../layout/header-store";
-import useResponsive from "../hooks/useResponsive";
 import { useTranslation } from "react-i18next";
+import useWindowSize from "../hooks/useWindowSize";
+import { useCallback, useMemo, useState } from "react";
+import { Profile } from "../models/profile";
 
 const getInitials = (n: string | null) => {
   if (n == null || n.length === 0) {
@@ -29,9 +34,9 @@ const getInitials = (n: string | null) => {
 };
 
 export const Contacts = () => {
-  const [t] = useTranslation();
+  const [t, i18n] = useTranslation();
   const [headerState] = useSubjectState(HeaderStore);
-  const { isMobile } = useResponsive();
+  const windowSize = useWindowSize();
   const [user, userLoading] = useAuth();
   const [contactsEmails, contactEmailsLoading] = useCollectionData(
     userLoading || user == null
@@ -42,7 +47,7 @@ export const Contacts = () => {
     }
   );
 
-  const [profiles] = useCollectionData(
+  const [profiles, profilesLoading] = useCollectionData(
     contactEmailsLoading || contactsEmails == null
       ? null
       : query(
@@ -50,32 +55,80 @@ export const Contacts = () => {
           where(
             "email",
             "in",
-            contactsEmails!.map((x) => x.email)
+            contactsEmails == null || contactsEmails.length === 0
+              ? [""]
+              : contactsEmails!.map((x) => x.email)
           )
-          // orderBy("displayName", "asc")
         ),
     {
       idField: "email",
     }
   );
 
+  const [selectedItems, setSelectedItems] = useState<Profile[]>([]);
+
+  const selection = new Selection({
+    selectionMode: SelectionMode.multiple,
+    onSelectionChanged: () => {
+      setSelectedItems(selection.getSelection() as Profile[]);
+    },
+  });
+
+  const deleteSelectedContacts = useCallback(async () => {
+    return Promise.all(
+      selectedItems.map((si) =>
+        deleteDocument(`contacts/${user!.email}/userContacts/${si.email}`)
+      )
+    );
+  }, [selectedItems, user]);
+
+  const commandItems = useMemo(() => {
+    return [
+      {
+        key: "add",
+        text: t("ui.contacts.add"),
+        iconProps: { iconName: "Add" },
+      },
+      {
+        key: "delete",
+        text: t("ui.contacts.delete"),
+        iconProps: { iconName: "Delete" },
+        disabled: selectedItems.length === 0,
+        onClick: deleteSelectedContacts,
+      },
+    ] as ICommandBarItemProps[];
+  }, [t, i18n.language, selectedItems]);
+
+  console.log(selectedItems);
   return (
     <Stack
       style={{ position: "relative" }}
       horizontal={false}
       verticalFill={true}
     >
-      {profiles && (
+      <CommandBar items={commandItems} styles={{ root: { padding: 0 } }} />
+      <Stack
+        styles={{
+          root: { flex: "1 1 auto", minHeight: "0", overflow: "auto" },
+        }}
+        horizontal={false}
+      >
         <ShimmeredDetailsList
-          key={headerState.isNavOpen + "_" + isMobile}
-          styles={{ root: { flex: "1 1 auto" } }}
-          items={profiles!}
+          key={headerState.isNavOpen + "_" + windowSize.width}
+          items={profiles == null ? [] : profiles}
+          enableShimmer={profilesLoading}
+          shimmerLines={10}
+          compact={false}
+          checkboxVisibility={CheckboxVisibility.always}
+          enableUpdateAnimations={true}
+          isHeaderVisible={false}
+          setKey="email"
           checkboxCellClassName="fullCheckbox"
           columns={[
             {
               key: "email",
-              name: t("ui.contacts.contacts"),
-              minWidth: 100,
+              name: "",
+              minWidth: 0,
               onRender: (data) => (
                 <Stack
                   horizontal={true}
@@ -105,15 +158,9 @@ export const Contacts = () => {
               ),
             },
           ]}
-          selectionMode={SelectionMode.multiple}
+          selection={selection}
         />
-      )}
-      <IconButton
-        styles={{ root: { position: "absolute", bottom: 0, right: 0 } }}
-        iconProps={{
-          iconName: "Add",
-        }}
-      />
+      </Stack>
     </Stack>
   );
 };

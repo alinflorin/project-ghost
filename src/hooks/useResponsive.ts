@@ -7,6 +7,7 @@ export const useResponsive = () => {
 
 	const isExtraLargeOrHigher = useMediaQuery({ minWidth: 1200 });
 
+
 	return { isMobile, isExtraLargeOrHigher, isLargeOrHigher };
 };
 
