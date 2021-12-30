@@ -36,3 +36,9 @@ a:focus {
 .side-nav-wrapper .ms-FocusZone {
   height: 100%;
 }
+
+.fullCheckbox {
+  .ms-DetailsRow-check {
+    height: 100% !important;
+  }
+}
