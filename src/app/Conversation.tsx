@@ -146,12 +146,13 @@ export const Conversation = () => {
 
   const send = useCallback(async () => {
     const message: Message = {
-      content: await encrypt(text),
+      content: encrypt(text)!,
       from: user!.email!,
       to: params.friendEmail!,
       seenDate: null,
       sentDate: serverTimestamp() as any,
     };
+    console.log(message);
     await insertDocument(
       getCollection(
         `conversations/${getConversationKey(
@@ -253,7 +254,7 @@ export const Conversation = () => {
                   label={t("ui.conversation.persist")}
                 />
                 <PrimaryButton
-                  disabled={!tempKey}
+                  disabled={!tempKey || rsaLoading}
                   onClick={saveKey}
                   text={t("ui.conversation.go")}
                 />
