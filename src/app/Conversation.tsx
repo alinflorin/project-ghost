@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   TextField,
+  TextFieldBase,
 } from "@fluentui/react";
 import {
   CollectionReference,
@@ -60,6 +61,7 @@ export const Conversation = () => {
   const [persist, setPersist] = useState<boolean>(false);
 
   const messagesBoxRef = useRef<HTMLDivElement | null>(null);
+  const textFieldRef = useRef<TextFieldBase | null>(null);
 
   const messagesCount = useRef<number>(0);
 
@@ -157,7 +159,8 @@ export const Conversation = () => {
       message
     );
     setText(undefined);
-  }, [user, params.friendEmail, text, setText]);
+    textFieldRef.current?.focus();
+  }, [user, params.friendEmail, text, setText, textFieldRef]);
 
   const getProfile = useCallback(
     (email: string) => {
@@ -379,6 +382,7 @@ export const Conversation = () => {
                 styles={{ root: { width: "100%" } }}
               >
                 <TextField
+                  componentRef={textFieldRef}
                   multiline={true}
                   value={text || ""}
                   onChange={(e) => setText((e.target as any).value)}
