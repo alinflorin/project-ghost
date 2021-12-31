@@ -312,7 +312,7 @@ export const Conversation = () => {
                               },
                               root: {
                                 minWidth: "50px",
-                                maxWidth: "50%",
+                                maxWidth: "75%",
                                 width: "auto !important",
                                 wordBreak: "break-word !important",
                               },
