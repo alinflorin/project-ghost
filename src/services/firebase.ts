@@ -7,7 +7,7 @@ import {
     updateProfile
 } from 'firebase/auth';
 import { getAnalytics, initializeAnalytics } from 'firebase/analytics';
-import { collection, doc, DocumentReference, getFirestore, setDoc, WithFieldValue, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc, DocumentReference, getFirestore, setDoc, WithFieldValue, getDoc, deleteDoc, addDoc, CollectionReference } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { LoginRequest } from '../models/login-request';
 import { SocialAccountType } from '../models/social-account-type';
@@ -76,6 +76,10 @@ export const upsertDocument = async <T>(ref: DocumentReference<T>, data: WithFie
     setDoc(ref, data, {
         merge: true
     });
+};
+
+export const insertDocument = async <T>(col: CollectionReference<T>, doc: T) => {
+    return addDoc(col, doc);
 };
 
 export const getDocument = async (path: string) => {

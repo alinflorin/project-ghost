@@ -1,10 +1,10 @@
 import { Timestamp } from 'firebase/firestore';
 
 export interface Message {
-    id: string;
+    id?: string;
     from: string;
     to: string;
     sentDate: Timestamp;
-    seenDate?: Timestamp;
+    seenDate: Timestamp | null;
     content: string;
 }
