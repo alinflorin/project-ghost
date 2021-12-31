@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { isOnline } from "../helpers/is-online";
 import { useAuth } from "../hooks/useAuth";
+import useCrypto from "../hooks/useCrypto";
 import { Message } from "../models/message";
 import { Profile } from "../models/profile";
 import {
@@ -100,6 +101,8 @@ export const Conversation = () => {
     }
   }, [setKey, tempKey, persist, params.friendEmail]);
 
+  const { encrypt, decrypt, rsaLoading } = useCrypto(key);
+
   const firstTimeLoading = useRef(true);
 
   const [messages, messagesLoading] = useCollectionData<Message>(
@@ -143,7 +146,7 @@ export const Conversation = () => {
 
   const send = useCallback(async () => {
     const message: Message = {
-      content: text!,
+      content: await encrypt(text),
       from: user!.email!,
       to: params.friendEmail!,
       seenDate: null,
@@ -160,7 +163,7 @@ export const Conversation = () => {
     );
     setText(undefined);
     textFieldRef.current?.focus();
-  }, [user, params.friendEmail, text, setText, textFieldRef]);
+  }, [user, params.friendEmail, text, setText, textFieldRef, encrypt]);
 
   const getProfile = useCallback(
     (email: string) => {
@@ -382,6 +385,7 @@ export const Conversation = () => {
                 styles={{ root: { width: "100%" } }}
               >
                 <TextField
+                  disabled={rsaLoading}
                   componentRef={textFieldRef}
                   multiline={true}
                   value={text || ""}
@@ -394,7 +398,7 @@ export const Conversation = () => {
                   }}
                 />
                 <IconButton
-                  disabled={text == null || text.length === 0}
+                  disabled={text == null || text.length === 0 || rsaLoading}
                   styles={{ root: { height: "100%" } }}
                   iconProps={{ iconName: "Send" }}
                   onClick={send}
