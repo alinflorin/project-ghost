@@ -91,7 +91,9 @@
             "offline": "Offline",
             "key": "Key",
             "go": "Go",
-            "persist": "Persist"
+            "persist": "Persist",
+            "unreadable": "Unreadable",
+            "decrypting": "Decrypting"
         }
     }
 }

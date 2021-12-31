@@ -91,7 +91,8 @@
             "offline": "Offline",
             "key": "Cheie",
             "go": "Hai",
-            "persist": "Persistă"
+            "persist": "Persistă",
+            "unreadable": "Necitibil"
         }
     }
 }
