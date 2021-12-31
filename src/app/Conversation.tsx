@@ -19,11 +19,12 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useDocumentData,
   useCollectionData,
 } from "react-firebase-hooks/firestore";
+import { Data } from "react-firebase-hooks/firestore/dist/firestore/types";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { isOnline } from "../helpers/is-online";
@@ -57,6 +58,20 @@ export const Conversation = () => {
 
   const [tempKey, setTempKey] = useState<string | undefined>();
   const [persist, setPersist] = useState<boolean>(false);
+
+  const messagesBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const messagesCount = useRef<number>(0);
+
+  const scrollToBottom = useCallback(() => {
+    if (!messagesBoxRef.current) {
+      return;
+    }
+    messagesBoxRef.current.scroll({
+      top: messagesBoxRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messagesBoxRef]);
 
   useEffect(() => {
     const lsKey = localStorage.getItem("key_" + params.friendEmail);
@@ -105,6 +120,18 @@ export const Conversation = () => {
   );
 
   useEffect(() => {
+    if (messages == null) {
+      return;
+    }
+    if (messages.length !== messagesCount.current) {
+      messagesCount.current = messages.length;
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    }
+  }, [messages, messagesCount, scrollToBottom]);
+
+  useEffect(() => {
     if (!messagesLoading && firstTimeLoading.current) {
       firstTimeLoading.current = false;
     }
@@ -141,6 +168,21 @@ export const Conversation = () => {
       }
     },
     [userProfile, friendProfile]
+  );
+
+  const onInputKeyDown = useCallback(
+    async (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (e.code === "Enter") {
+        if (!e.ctrlKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          await send();
+        } else {
+          setText(text + "\n");
+        }
+      }
+    },
+    [send, setText, text]
   );
 
   return (
@@ -215,10 +257,14 @@ export const Conversation = () => {
 
           {key && (
             <>
-              <Stack
-                horizontal={false}
-                verticalFill={true}
-                styles={{ root: { overflow: "auto", minHeight: "0" } }}
+              <div
+                ref={messagesBoxRef}
+                style={{
+                  overflow: "auto",
+                  minHeight: "0",
+                  flex: "1 1 auto",
+                  width: "100%",
+                }}
               >
                 {firstTimeLoading.current && (
                   <Stack horizontal={false} tokens={{ childrenGap: "1rem" }}>
@@ -239,7 +285,8 @@ export const Conversation = () => {
                     horizontal={false}
                     horizontalAlign="start"
                     verticalAlign="start"
-                    styles={{ root: { width: "100%" } }}
+                    tokens={{ childrenGap: "1rem" }}
+                    styles={{ root: { width: "100%", padding: "1rem" } }}
                   >
                     {messages != null &&
                       messages.length > 0 &&
@@ -267,12 +314,13 @@ export const Conversation = () => {
                                 minWidth: "50px",
                                 maxWidth: "50%",
                                 width: "auto !important",
-                                wordBreak: "break-all !important",
+                                wordBreak: "break-word !important",
                               },
                             }}
                           >
                             <Stack
                               horizontal={true}
+                              reversed={msg.from === user?.email}
                               verticalAlign="start"
                               tokens={{ childrenGap: "1rem" }}
                             >
@@ -286,16 +334,28 @@ export const Conversation = () => {
                                 text={
                                   getProfile(msg.from)!.displayName || undefined
                                 }
-                                size={PersonaSize.size32}
+                                size={PersonaSize.size24}
                                 presence={PersonaPresence.none}
                                 hidePersonaDetails={true}
                               />
-                              <p>{msg.content}</p>
+                              <div
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "0.9rem",
+                                }}
+                                dangerouslySetInnerHTML={{
+                                  __html: msg.content.replaceAll(
+                                    "\n",
+                                    "<br />"
+                                  ),
+                                }}
+                              ></div>
                             </Stack>
                             <Stack
                               horizontal={true}
                               grow={true}
-                              horizontalAlign="start"
+                              horizontalAlign="end"
                             >
                               <Text
                                 variant="tiny"
@@ -309,7 +369,7 @@ export const Conversation = () => {
                       ))}
                   </Stack>
                 )}
-              </Stack>
+              </div>
               <Stack
                 verticalAlign="center"
                 tokens={{
@@ -322,6 +382,7 @@ export const Conversation = () => {
                   multiline={true}
                   value={text || ""}
                   onChange={(e) => setText((e.target as any).value)}
+                  onKeyDown={onInputKeyDown}
                   styles={{
                     root: {
                       flex: "1 1 auto",
