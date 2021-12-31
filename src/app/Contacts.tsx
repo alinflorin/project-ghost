@@ -20,9 +20,11 @@ import useSubjectState from "../hooks/useSubjectState";
 import HeaderStore from "../layout/header-store";
 import { useTranslation } from "react-i18next";
 import useWindowSize from "../hooks/useWindowSize";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Profile } from "../models/profile";
 import AddContact from "./AddContact";
+import { useInterval } from "../hooks/useInterval";
+import { environment } from "../environment";
 
 const getInitials = (n: string | null) => {
   if (n == null || n.length === 0) {
@@ -66,6 +68,19 @@ export const Contacts = () => {
       idField: "email",
     }
   );
+
+  const [profilesList, setProfilesList] = useState<Profile[] | undefined>();
+
+  useEffect(() => {
+    setProfilesList(!profiles ? undefined : profiles.map((x) => x as Profile));
+  }, [profiles, setProfilesList]);
+
+  useInterval(() => {
+    if (profilesList == null || profilesList.length === 0) {
+      return;
+    }
+    setProfilesList([...profilesList]);
+  }, environment.heartbeat);
 
   const [selectedItems, setSelectedItems] = useState<Profile[]>([]);
 
@@ -126,7 +141,7 @@ export const Contacts = () => {
         >
           <ShimmeredDetailsList
             key={headerState.isNavOpen + "_" + windowSize.width}
-            items={profiles == null ? [] : profiles}
+            items={profilesList == null ? [] : profilesList}
             enableShimmer={profilesLoading}
             shimmerLines={10}
             compact={false}
@@ -154,6 +169,7 @@ export const Contacts = () => {
                       imageInitials={getInitials(data.displayName)}
                       text={data.displayName || undefined}
                       size={PersonaSize.size32}
+                      key={isOnline(data?.lastSeen).toString()}
                       presence={
                         isOnline(data?.lastSeen)
                           ? PersonaPresence.online
