@@ -7,13 +7,18 @@ import {
   Text,
   TextField,
 } from "@fluentui/react";
+import { query } from "firebase/firestore";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import {
+  useDocumentData,
+  useCollectionData,
+} from "react-firebase-hooks/firestore";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { isOnline } from "../helpers/is-online";
+import { useAuth } from "../hooks/useAuth";
 import { Profile } from "../models/profile";
-import { getDocumentRef } from "../services/firebase";
+import { getCollection, getDocumentRef } from "../services/firebase";
 
 const getInitials = (n: string | null) => {
   if (n == null || n.length === 0) {
@@ -25,7 +30,12 @@ const getInitials = (n: string | null) => {
     .join("");
 };
 
+const getConversationKey = (email1: string, email2: string) => {
+  return [email1, email2].sort().join("_");
+};
+
 export const Conversation = () => {
+  const [user, userLoading] = useAuth();
   const [key, setKey] = useState<string | undefined>();
   const params = useParams();
 
@@ -50,6 +60,19 @@ export const Conversation = () => {
       localStorage.setItem("key_" + params.friendEmail, tempKey!);
     }
   }, [setKey, tempKey, persist, params.friendEmail]);
+
+  const [messages, messagesLoading] = useCollectionData(
+    key == null || userLoading || user == null
+      ? null
+      : query(
+          getCollection(
+            `conversations/${getConversationKey(
+              user!.email!,
+              params.friendEmail!
+            )}/messages`
+          )
+        )
+  );
 
   return (
     <>
