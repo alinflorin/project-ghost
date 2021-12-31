@@ -126,7 +126,7 @@ export const Conversation = () => {
                 <TextField
                   iconProps={{ iconName: "PasswordField" }}
                   type="password"
-                  value={tempKey}
+                  value={tempKey || ""}
                   onChange={(e) => setTempKey((e.target as any).value)}
                   label={t("ui.conversation.key")}
                 />
