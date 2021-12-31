@@ -192,22 +192,9 @@ export const Conversation = () => {
     [send, setText, text]
   );
 
-  const safeDecrypt = useCallback(
-    (message: string | null | undefined) => {
-      if (!message) {
-        return "";
-      }
-      if (rsaLoading) {
-        return t("ui.conversation.decrypting") + "...";
-      }
-      try {
-        return decrypt(message)!;
-      } catch (err) {
-        return t("ui.conversation.unreadable") + "!";
-      }
-    },
-    [decrypt, rsaLoading, t]
-  );
+  const safeDecrypt = useCallback((message: Data<Message, "", "">) => {
+    return "";
+  }, []);
 
   return (
     <>
@@ -369,9 +356,8 @@ export const Conversation = () => {
                                   fontSize: "0.9rem",
                                 }}
                                 dangerouslySetInnerHTML={{
-                                  __html: safeDecrypt(msg.content).replaceAll(
-                                    "\n",
-                                    "<br />"
+                                  __html: t(
+                                    safeDecrypt(msg).replaceAll("\n", "<br />")
                                   ),
                                 }}
                               ></div>
