@@ -25,6 +25,7 @@ import { Profile } from "../models/profile";
 import AddContact from "./AddContact";
 import { useInterval } from "../hooks/useInterval";
 import { environment } from "../environment";
+import { useNavigate } from "react-router-dom";
 
 const getInitials = (n: string | null) => {
   if (n == null || n.length === 0) {
@@ -37,6 +38,7 @@ const getInitials = (n: string | null) => {
 };
 
 export const Contacts = () => {
+  const router = useNavigate();
   const [t, i18n] = useTranslation();
   const [headerState] = useSubjectState(HeaderStore);
   const windowSize = useWindowSize();
@@ -125,6 +127,13 @@ export const Contacts = () => {
     setAddContactVisible(false);
   }, [setAddContactVisible]);
 
+  const rowClick = useCallback(
+    (email: string) => {
+      router(`/conversation/${email}`);
+    },
+    [router]
+  );
+
   return (
     <>
       <Stack
@@ -140,6 +149,7 @@ export const Contacts = () => {
           horizontal={false}
         >
           <ShimmeredDetailsList
+            styles={{ root: { width: "100%" } }}
             key={headerState.isNavOpen + "_" + windowSize.width}
             items={profilesList == null ? [] : profilesList}
             enableShimmer={profilesLoading}
@@ -157,9 +167,11 @@ export const Contacts = () => {
                 minWidth: 0,
                 onRender: (data) => (
                   <Stack
+                    styles={{ root: { cursor: "pointer" } }}
                     horizontal={true}
                     verticalAlign="center"
                     horizontalAlign="start"
+                    onClick={() => rowClick(data.email)}
                     tokens={{
                       childrenGap: "1rem",
                     }}

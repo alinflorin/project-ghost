@@ -84,6 +84,11 @@
             "invalidEmail": "Invalid email",
             "emailDoesntExist": "Email doesn't exist",
             "contactAdded": "Contact added"
+        },
+        "conversation": {
+            "lastSeenAt": "Last seen",
+            "online": "Online",
+            "offline": "Offline"
         }
     }
 }

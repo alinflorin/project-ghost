@@ -1,6 +1,6 @@
 export const environment = {
     toastTimeout: 5000,
-    heartbeat: 2000,
+    heartbeat: 10000,
     availableLanguages: [
         { code: 'en-US', name: 'English' },
         { code: 'ro-RO', name: 'Română' },

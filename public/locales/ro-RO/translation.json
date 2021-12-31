@@ -84,6 +84,11 @@
             "invalidEmail": "Email invalid",
             "emailDoesntExist": "Email-ul nu există",
             "contactAdded": "Contact adăugat"
+        },
+        "conversation": {
+            "lastSeenAt": "Văzut la",
+            "online": "Online",
+            "offline": "Offline"
         }
     }
 }
