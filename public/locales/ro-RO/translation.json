@@ -88,7 +88,10 @@
         "conversation": {
             "lastSeenAt": "Văzut la",
             "online": "Online",
-            "offline": "Offline"
+            "offline": "Offline",
+            "key": "Cheie",
+            "go": "Hai",
+            "persist": "Persistă"
         }
     }
 }
