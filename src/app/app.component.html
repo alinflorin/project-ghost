@@ -1,10 +1,14 @@
-<div fxLayout="column" fxFlexFill id="wrapper">
+<div fxLayout="column" class="w-100 h-100" id="wrapper">
   <app-header [drawer]="drawer" [isMobile]="isMobile"></app-header>
   <mat-divider></mat-divider>
-  <div fxFlex="1 1 auto" id="content">
+  <div fxFlex="1 1 auto" class="mh-0" id="content">
     <mat-drawer-container fxFlex="1 1 auto">
-      <mat-drawer class="p-1" #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">Drawer content</mat-drawer>
-      <mat-drawer-content class="p-1" fxFlex="1 1 auto">Main content</mat-drawer-content>
+      <mat-drawer class="p-1" #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">
+        <app-sidenav></app-sidenav>
+      </mat-drawer>
+      <mat-drawer-content fxLayout="column" class="p-1 mh-0" fxFlex="1 1 auto">
+        <router-outlet></router-outlet>
+      </mat-drawer-content>
     </mat-drawer-container>
   </div>
   <app-footer></app-footer>

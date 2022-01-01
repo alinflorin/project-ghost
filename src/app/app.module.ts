@@ -36,6 +36,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { SignupComponent } from './signup/signup.component';
 
 registerLocaleData(localeRO, 'ro');
 
@@ -54,7 +56,9 @@ export function httpLoaderFactory(http: HttpClient) {
     ContactsComponent,
     SettingsComponent,
     ConversationComponent,
-    LoginComponent
+    LoginComponent,
+    ForgotPasswordComponent,
+    SignupComponent
   ],
   imports: [
     SharedModule,

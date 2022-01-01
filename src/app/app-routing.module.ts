@@ -4,9 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { ContactsComponent } from './contacts/contacts.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SignupComponent } from './signup/signup.component';
 
 const apg: AuthPipeGenerator = (next, _) => redirectUnauthorizedTo(`login?returnTo=${encodeURIComponent(next.url.toString())}`);
 
@@ -19,6 +21,14 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'signup',
+    component: SignupComponent
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
   },
   {
     path: 'contacts',

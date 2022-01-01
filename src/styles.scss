@@ -31,3 +31,25 @@ body {
 .cp {
   cursor: pointer;
 }
+
+.m-auto {
+  margin: auto;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.mh-0 {
+  min-height: 0;
+}
