@@ -12,7 +12,6 @@ export const useCrypto = (key: string | undefined | null) => {
         }
         setLoading(true);
         (async () => {
-            console.log('Generating...');
             const rsaKey = cryptico.generateRSAKey(key, 2048);
             const pubKey = cryptico.publicKeyString(rsaKey);
             setRsa({

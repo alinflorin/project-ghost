@@ -152,7 +152,6 @@ export const Conversation = () => {
       seenDate: null,
       sentDate: serverTimestamp() as any,
     };
-    console.log(message);
     await insertDocument(
       getCollection(
         `conversations/${getConversationKey(
@@ -191,10 +190,6 @@ export const Conversation = () => {
     },
     [send, setText, text]
   );
-
-  const safeDecrypt = useCallback((message: Data<Message, "", "">) => {
-    return "";
-  }, []);
 
   return (
     <>
@@ -356,9 +351,7 @@ export const Conversation = () => {
                                   fontSize: "0.9rem",
                                 }}
                                 dangerouslySetInnerHTML={{
-                                  __html: t(
-                                    safeDecrypt(msg).replaceAll("\n", "<br />")
-                                  ),
+                                  __html: msg.content,
                                 }}
                               ></div>
                             </Stack>
