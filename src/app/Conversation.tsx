@@ -134,14 +134,19 @@ export const Conversation = () => {
       return;
     }
     const list = [...decryptedMessages];
-    console.log(messages);
     for (
       let i = messages.length - 1;
       i >= (decryptedMessages.length === 0 ? 1 : decryptedMessages.length) - 1;
       i--
     ) {
+      let dec: string | undefined | null;
+      try {
+        dec = decrypt(messages[i].content);
+      } catch (err) {
+        dec = t("ui.conversation.unreadable");
+      }
       list[i] = {
-        content: decrypt(messages[i].content),
+        content: dec,
         from: messages[i].from,
         to: messages[i].to,
         id: messages[i].id,
@@ -150,7 +155,7 @@ export const Conversation = () => {
       } as Message;
     }
     setDecryptedMessages(list);
-  }, [setDecryptedMessages, decryptedMessages, messages, decrypt]);
+  }, [setDecryptedMessages, decryptedMessages, messages, decrypt, t]);
 
   useEffect(() => {
     if (decryptedMessages.length === 0) {
