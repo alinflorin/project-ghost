@@ -124,23 +124,51 @@ export const Conversation = () => {
     }
   );
 
+  const [decryptedMessages, setDecryptedMessages] = useState<Message[]>([]);
+
   useEffect(() => {
     if (messages == null) {
       return;
     }
-    if (messages.length !== messagesCount.current) {
-      messagesCount.current = messages.length;
+    if (decryptedMessages.length === messages.length) {
+      return;
+    }
+    const list = [...decryptedMessages];
+    console.log(messages);
+    for (
+      let i = messages.length - 1;
+      i >= (decryptedMessages.length === 0 ? 1 : decryptedMessages.length) - 1;
+      i--
+    ) {
+      list[i] = {
+        content: decrypt(messages[i].content),
+        from: messages[i].from,
+        to: messages[i].to,
+        id: messages[i].id,
+        seenDate: messages[i].seenDate,
+        sentDate: messages[i].sentDate,
+      } as Message;
+    }
+    setDecryptedMessages(list);
+  }, [setDecryptedMessages, decryptedMessages, messages, decrypt]);
+
+  useEffect(() => {
+    if (decryptedMessages.length === 0) {
+      return;
+    }
+    if (decryptedMessages.length !== messagesCount.current) {
+      messagesCount.current = decryptedMessages.length;
       setTimeout(() => {
         scrollToBottom();
       }, 100);
     }
-  }, [messages, messagesCount, scrollToBottom]);
+  }, [decryptedMessages, messagesCount, scrollToBottom]);
 
   useEffect(() => {
-    if (!messagesLoading && firstTimeLoading.current) {
+    if (decryptedMessages.length > 0 && firstTimeLoading.current) {
       firstTimeLoading.current = false;
     }
-  }, [messagesLoading, firstTimeLoading]);
+  }, [decryptedMessages, firstTimeLoading]);
 
   const [text, setText] = useState<string | undefined>();
 
@@ -294,9 +322,8 @@ export const Conversation = () => {
                     tokens={{ childrenGap: "1rem" }}
                     styles={{ root: { width: "100%", padding: "1rem" } }}
                   >
-                    {messages != null &&
-                      messages.length > 0 &&
-                      messages.map((msg, i) => (
+                    {decryptedMessages.length > 0 &&
+                      decryptedMessages.map((msg, i) => (
                         <Stack
                           horizontal={true}
                           horizontalAlign={
