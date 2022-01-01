@@ -306,7 +306,11 @@ export const Conversation = () => {
                 }}
               >
                 {firstTimeLoading.current && (
-                  <Stack horizontal={false} tokens={{ childrenGap: "1rem" }}>
+                  <Stack
+                    horizontal={false}
+                    verticalFill={true}
+                    tokens={{ childrenGap: "1rem" }}
+                  >
                     <Shimmer />
                     <Shimmer />
                     <Shimmer />
