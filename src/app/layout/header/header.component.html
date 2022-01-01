@@ -1,0 +1,23 @@
+<mat-toolbar fxLayoutGap="1rem" fxLayout="row" fxLayoutAlign="flex-start center">
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <img class="h-100" src="/assets/images/logo.svg" />
+  <span fxFlex="1 1 auto"></span>
+  <button [matMenuTriggerFor]="menu" mat-icon-button>
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button [matMenuTriggerFor]="langMenu" mat-menu-item>
+    <mat-icon>language</mat-icon>
+    <span>{{'ui.header.language' | translate}}</span>
+  </button>
+</mat-menu>
+
+<mat-menu #langMenu="matMenu">
+  <button (click)="changeLanguage(l.code)" *ngFor="let l of allLanguages" mat-menu-item>
+    <span [style.fontWeight]="translateService.currentLang === l.code ? 700 : 400">{{l.label}}</span>
+  </button>
+</mat-menu>

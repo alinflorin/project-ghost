@@ -93,6 +93,18 @@
       "go": "Hai",
       "persist": "Persistă",
       "unreadable": "Necitibil"
+    },
+    "confirmation": {
+      "confirm": "Confirmare",
+      "no": "Nu",
+      "yes": "Da",
+      "areYouSure": "Sunteți sigur?"
+    },
+    "toast": {
+      "severity_error": "Eroare",
+      "severity_warn": "Avertizare",
+      "severity_info": "Informație",
+      "severity_success": "Succes"
     }
   }
 }

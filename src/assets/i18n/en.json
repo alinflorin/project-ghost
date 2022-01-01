@@ -94,6 +94,18 @@
       "persist": "Persist",
       "unreadable": "Unreadable",
       "decrypting": "Decrypting"
+    },
+    "confirmation": {
+      "confirm": "Confirm",
+      "no": "No",
+      "yes": "Yes",
+      "areYouSure": "Are you sure?"
+    },
+    "toast": {
+      "severity_error": "Error",
+      "severity_warn": "Warning",
+      "severity_info": "Information",
+      "severity_success": "Success"
     }
   }
 }

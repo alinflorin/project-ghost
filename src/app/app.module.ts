@@ -9,15 +9,32 @@ import { environment } from '../environments/environment';
 import { registerLocaleData } from '@angular/common';
 import localeRO from '@angular/common/locales/ro';
 import { LocaleProvider } from './services/locale.provider';
-import { MatPaginatorIntl } from '@angular/material/paginator';
-import { PaginatorI18nService } from './services/paginator-i18n.service';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { SharedModule } from './shared/shared.module';
 import { ConfirmationModule } from './shared/confirmation/confirmation.module';
+import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { AuthGuardModule } from '@angular/fire/auth-guard';
+import { HeaderComponent } from './layout/header/header.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { SidenavComponent } from './layout/sidenav/sidenav.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ContactsComponent } from './contacts/contacts.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ConversationComponent } from './conversation/conversation.component';
+import { LoginComponent } from './login/login.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 registerLocaleData(localeRO, 'ro');
 
@@ -28,7 +45,15 @@ export function httpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    HeaderComponent,
+    FooterComponent,
+    SidenavComponent,
+    DashboardComponent,
+    ContactsComponent,
+    SettingsComponent,
+    ConversationComponent,
+    LoginComponent
   ],
   imports: [
     SharedModule,
@@ -38,8 +63,6 @@ export function httpLoaderFactory(http: HttpClient) {
     ConfirmationModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
     HttpClientModule,
@@ -51,17 +74,21 @@ export function httpLoaderFactory(http: HttpClient) {
       },
       defaultLanguage: environment.defaultLanguage
     }),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore(getApp())),
+    provideAuth(() => getAuth(getApp())),
+    AuthGuardModule,
+
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatMenuModule,
+    ReactiveFormsModule
   ],
   providers: [
     LocaleProvider,
-    {
-      provide: MAT_DATE_LOCALE,
-      useValue: environment.defaultLanguage
-    },
-    {
-      provide: MatPaginatorIntl, deps: [TranslateService],
-      useFactory: (translateService: TranslateService) => new PaginatorI18nService(translateService).getPaginatorIntl()
-    },
   ],
   bootstrap: [AppComponent]
 })
