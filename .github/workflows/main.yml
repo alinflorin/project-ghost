@@ -46,7 +46,7 @@ jobs:
         if: ${{ success() && github.event_name != 'pull_request' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master') }}
         with:
           name: dist
-          path: ./dist
+          path: ./dist/project-ghost
 
   deploy_stg:
     if: ${{ success() && github.event_name != 'pull_request' && github.ref == 'refs/heads/develop' }}
