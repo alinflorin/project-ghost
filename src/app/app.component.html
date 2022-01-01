@@ -1,8 +1,9 @@
 <div fxLayout="column" fxFlexFill id="wrapper">
-  <app-header></app-header>
+  <app-header [drawer]="drawer" [isMobile]="isMobile"></app-header>
+  <mat-divider></mat-divider>
   <div fxFlex="1 1 auto" id="content">
     <mat-drawer-container fxFlex="1 1 auto">
-      <mat-drawer #drawer mode="over">Drawer content</mat-drawer>
+      <mat-drawer class="p-1" #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">Drawer content</mat-drawer>
       <mat-drawer-content class="p-1" fxFlex="1 1 auto">Main content</mat-drawer-content>
     </mat-drawer-container>
   </div>

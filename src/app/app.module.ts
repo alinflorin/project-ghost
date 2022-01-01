@@ -35,6 +35,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDividerModule } from '@angular/material/divider';
 
 registerLocaleData(localeRO, 'ro');
 
@@ -86,7 +87,8 @@ export function httpLoaderFactory(http: HttpClient) {
     MatInputModule,
     MatMenuModule,
     ReactiveFormsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatDividerModule
 
   ],
   providers: [

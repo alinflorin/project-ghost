@@ -1,8 +1,8 @@
 <mat-toolbar fxLayoutGap="1rem" fxLayout="row" fxLayoutAlign="flex-start center">
-  <button mat-icon-button>
-    <mat-icon>menu</mat-icon>
+  <button (click)="toggleDrawer()" *ngIf="isMobile" mat-icon-button>
+    <mat-icon>{{drawer?.opened ? 'clear' : 'menu'}}</mat-icon>
   </button>
-  <img routerLink="" class="h-100 cp" src="/assets/images/logo.svg" />
+  <img routerLink="" class="h-80 cp" src="/assets/images/logo.svg" />
   <span fxFlex="1 1 auto"></span>
   <button [matMenuTriggerFor]="menu" mat-icon-button>
     <mat-icon>more_vert</mat-icon>

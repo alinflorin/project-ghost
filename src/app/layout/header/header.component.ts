@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 
@@ -8,6 +9,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  @Input('isMobile') isMobile = false;
+  @Input('drawer') drawer: MatDrawer | undefined;
   allLanguages = environment.availableLanguages;
 
   constructor(public translateService: TranslateService) { }
@@ -17,5 +20,9 @@ export class HeaderComponent implements OnInit {
 
   changeLanguage(code: string) {
     this.translateService.use(code);
+  }
+
+  toggleDrawer() {
+    this.drawer?.toggle();
   }
 }
