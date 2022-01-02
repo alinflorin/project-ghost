@@ -1,1 +1,6 @@
-<p>settings works!</p>
+<form>
+  <h1>{{'ui.settings.settings' | translate}}</h1>
+  <mat-slide-toggle [checked]="disableLastSeen" (change)="disableLastSeenChanged($event)">
+    {{'ui.settings.disableLastSeen' | translate}}
+  </mat-slide-toggle>
+</form>

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Auth, User } from '@angular/fire/auth';
-import { Firestore, docData, setDoc } from '@angular/fire/firestore';
+import { Firestore, docData, setDoc, docSnapshots } from '@angular/fire/firestore';
 import { MediaObserver } from '@angular/flex-layout';
 import { TranslateService } from '@ngx-translate/core';
 import { doc, serverTimestamp } from 'firebase/firestore';
@@ -51,13 +51,12 @@ export class AppComponent implements OnInit, OnDestroy {
       user(this.auth).subscribe(user => {
         this.user = user;
         if (user) {
-          this.profileSub = docData<Profile>(doc(this.firestore, `profiles/${user.email}`), {
-            idField: 'id'
-          }).subscribe(p => {
-            if (!this.disableLastSeen && p.lastSeen == null) {
+          this.profileSub = docSnapshots<Profile>(doc(this.firestore, `profiles/${user!.email}`)).subscribe(ds => {
+            if (ds.metadata.hasPendingWrites) {
               return;
             }
-            this.profile = p;
+            this.profile = ds.data();
+            this.profile!.email = ds.id;
           });
 
           this.upSub = docData<UserPreferences>(doc(this.firestore, `userPreferences/${user.email}`), {

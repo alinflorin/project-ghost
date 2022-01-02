@@ -38,6 +38,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
@@ -98,7 +99,8 @@ export function httpLoaderFactory(http: HttpClient) {
     MatSidenavModule,
     MatDividerModule,
     MatCardModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatSlideToggleModule
 
   ],
   providers: [
