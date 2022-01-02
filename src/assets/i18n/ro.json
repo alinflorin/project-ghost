@@ -71,7 +71,8 @@
       "firstNameRequired": "Prenumele este obligatoriu",
       "lastNameRequired": "Numele este obligatoriu",
       "passwordRequired": "Parola este obligatorie",
-      "passwordConfirmationRequired": "Confirmarea parolei este obligatorie"
+      "passwordConfirmationRequired": "Confirmarea parolei este obligatorie",
+      "passwordConfirmationTooShort": "Confirmarea parolei este prea scurtă, minim {{chars}} caractere necesare"
     },
     "contacts": {
       "email": "Email",

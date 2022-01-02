@@ -1,1 +1,57 @@
-<p>signup works!</p>
+<div fxFlex="1 1 auto" fxLayout="row">
+  <form (submit)="signup()" fxFlex="1 1 100%" fxFlex.gt-xs="1 1 75%" fxFlex.gt-sm="50%" fxFlex.gt-md="1 1 33%" [formGroup]="form"
+    class="m-auto">
+    <h1>{{'ui.signup.signup' | translate}}</h1>
+    <mat-error *ngIf="form.hasError('backend')">
+      <mat-error *ngFor="let err of form.getError('backend')">
+        {{ err | translate }}
+      </mat-error>
+    </mat-error>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.signup.email' | translate}}</mat-label>
+      <input type="email" required matInput formControlName="email" />
+      <mat-error *ngIf="form.get('email')!.hasError('required')">{{'ui.signup.emailRequired' | translate}}</mat-error>
+      <mat-error *ngIf="form.get('email')!.hasError('email')">{{'ui.signup.invalidEmail' | translate}}</mat-error>
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.signup.password' | translate}}</mat-label>
+      <input type="password" required matInput formControlName="password" />
+      <mat-error *ngIf="form.get('password')!.hasError('required')">{{'ui.signup.passwordRequired' | translate}}</mat-error>
+      <mat-error *ngIf="form.get('password')!.hasError('minlength')">{{'ui.signup.passwordTooShort' | translate:{'chars': 6} }}</mat-error>
+      <mat-error *ngIf="form.get('password')!.hasError('matching')">{{'ui.signup.passwordsMustMatch' | translate}}</mat-error>
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.signup.passwordConfirmation' | translate}}</mat-label>
+      <input type="password" required matInput formControlName="password2" />
+      <mat-error *ngIf="form.get('password2')!.hasError('required')">{{'ui.signup.passwordConfirmationRequired' | translate}}</mat-error>
+      <mat-error *ngIf="form.get('password2')!.hasError('minlength')">{{'ui.signup.passwordConfirmationTooShort' | translate:{'chars': 6} }}
+      </mat-error>
+      <mat-error *ngIf="form.get('password2')!.hasError('matching')">{{'ui.signup.passwordsMustMatch' | translate}}</mat-error>
+
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.signup.firstName' | translate}}</mat-label>
+      <input type="text" required matInput formControlName="firstName" />
+      <mat-error *ngIf="form.get('firstName')!.hasError('required')">{{'ui.signup.firstNameRequired' | translate}}</mat-error>
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.signup.lastName' | translate}}</mat-label>
+      <input type="text" required matInput formControlName="lastName" />
+      <mat-error *ngIf="form.get('lastName')!.hasError('required')">{{'ui.signup.lastNameRequired' | translate}}</mat-error>
+    </mat-form-field>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <a routerLink="/login">{{'ui.signup.alreadyHaveAccountLogin' | translate}}</a>
+    </div>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button [disabled]="form.invalid" mat-raised-button color="accent">
+        {{'ui.signup.signup' | translate}}
+      </button>
+    </div>
+  </form>
+</div>

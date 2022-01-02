@@ -1,5 +1,46 @@
 <div fxFlex="1 1 auto" fxLayout="row">
-  <form class="m-auto">
-    asd
+  <form (submit)="loginWithEmailAndPassword()" fxFlex="1 1 100%" fxFlex.gt-xs="1 1 75%" fxFlex.gt-sm="50%" fxFlex.gt-md="1 1 33%"
+    [formGroup]="form" class="m-auto">
+    <h1>{{'ui.login.login' | translate}}</h1>
+    <mat-error *ngIf="form.hasError('backend')">
+      <mat-error *ngFor="let err of form.getError('backend')">
+        {{ err | translate }}
+      </mat-error>
+    </mat-error>
+    <mat-card class="mb-1" *ngIf="message">
+      <mat-card-content>
+        <p>{{message | translate}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.login.email' | translate}}</mat-label>
+      <input type="email" required matInput formControlName="email" />
+      <mat-error *ngIf="form.get('email')!.hasError('required')">{{'ui.login.emailRequired' | translate}}</mat-error>
+      <mat-error *ngIf="form.get('email')!.hasError('email')">{{'ui.login.invalidEmail' | translate}}</mat-error>
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{'ui.login.password' | translate}}</mat-label>
+      <input type="password" required matInput formControlName="password" />
+      <mat-error *ngIf="form.get('password')!.hasError('required')">{{'ui.login.passwordRequired' | translate}}</mat-error>
+      <mat-error *ngIf="form.get('password')!.hasError('minlength')">{{'ui.login.passwordTooShort' | translate:{'chars': 6} }}</mat-error>
+    </mat-form-field>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <a routerLink="/signup">{{'ui.login.noAccountSignUp' | translate}}</a> |
+      <a routerLink="/forgot-password">{{'ui.login.forgotPassword' | translate}}</a>
+    </div>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button [disabled]="form.invalid" mat-raised-button color="accent">
+        {{'ui.login.login' | translate}}
+      </button>
+    </div>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <img class="cp social" (click)="loginWithSocial(socialProviders.Google)" src="/assets/images/google.png" fxFlex="1 1 auto" />
+      <img class="cp social" (click)="loginWithSocial(socialProviders.Facebook)" src="/assets/images/facebook.png" fxFlex="1 1 auto" />
+      <img class="cp social" (click)="loginWithSocial(socialProviders.Microsoft)" src="/assets/images/microsoft.png" fxFlex="1 1 auto" />
+    </div>
   </form>
 </div>

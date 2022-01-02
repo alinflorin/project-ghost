@@ -71,7 +71,8 @@
       "firstNameRequired": "First Name is required",
       "lastNameRequired": "Last Name is required",
       "passwordRequired": "Password is required",
-      "passwordConfirmationRequired": "Password confirmation is required"
+      "passwordConfirmationRequired": "Password confirmation is required",
+      "passwordConfirmationTooShort": "Password confirmation is too short, it needs to be min. {{chars}} characters"
     },
     "contacts": {
       "email": "Email",

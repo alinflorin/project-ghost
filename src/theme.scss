@@ -264,3 +264,7 @@ $altTheme: (
     font-family: "IBM Plex Mono";
   }
 }
+
+a {
+  color: var(--accent-color);
+}
