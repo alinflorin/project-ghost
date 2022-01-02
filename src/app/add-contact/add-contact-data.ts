@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+import { User } from '@angular/fire/auth';
 
 export interface AddContactData {
   user: User | null;

@@ -1,9 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Firestore, getDoc, setDoc } from '@angular/fire/firestore';
+import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { doc } from 'firebase/firestore';
-import { docData } from 'rxfire/firestore';
 import { from } from 'rxjs';
 import { AddContactData } from './add-contact-data';
 

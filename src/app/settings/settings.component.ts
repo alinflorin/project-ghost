@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, User } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Auth, user, User } from '@angular/fire/auth';
+import { doc, docData, Firestore, serverTimestamp, setDoc } from '@angular/fire/firestore';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { user } from 'rxfire/auth';
-import { docData } from 'rxfire/firestore';
 import { from, switchMap, take } from 'rxjs';
 import { UserPreferences } from '../models/user-preferences';
 

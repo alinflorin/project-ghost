@@ -1,9 +1,9 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from '@angular/fire/firestore';
 
 export interface Profile {
-    id?: string;
-    lastSeen?: Timestamp;
-    email?: string;
-    displayName?: string;
-    photo?: string;
+  id?: string;
+  lastSeen?: Timestamp;
+  email?: string;
+  displayName?: string;
+  photo?: string;
 }

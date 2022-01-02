@@ -1,10 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Auth, User } from '@angular/fire/auth';
-import { Firestore, collection, deleteDoc, doc } from '@angular/fire/firestore';
-import { collection as col, query, where } from 'firebase/firestore';
+import { Auth, user, User } from '@angular/fire/auth';
+import { Firestore, deleteDoc, doc, collection, where, query, CollectionReference, collectionData } from '@angular/fire/firestore';
 import { MatSelectionListChange } from '@angular/material/list';
-import { user } from 'rxfire/auth';
-import { collectionData } from 'rxfire/firestore';
 import { from, map, Subscription, switchMap, take } from 'rxjs';
 import { Contact } from '../models/contact';
 import { Profile } from '../models/profile';
@@ -12,7 +9,6 @@ import { ConfirmationService } from '../shared/confirmation/services/confirmatio
 import { MatDialog } from '@angular/material/dialog';
 import { AddContactComponent } from '../add-contact/add-contact.component';
 import { AddContactData } from '../add-contact/add-contact-data';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contacts',
@@ -27,7 +23,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   private user: User | null = null;
 
   constructor(private auth: Auth, private firestore: Firestore, private confirmationService: ConfirmationService,
-    private dialog: MatDialog, private router: Router) { }
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this._destroy.push(
@@ -35,8 +31,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
         this.user = u;
 
         this._destroy.push(
-          collectionData(
-            col(this.firestore, `contacts/${u!.email}/userContacts`), { idField: 'email' }
+          collectionData<Contact>(
+            query(collection(this.firestore, `contacts/${u!.email}/userContacts`) as CollectionReference<Contact>),
+            { idField: 'email' }
           )
             .pipe(
               map(dd => {
@@ -47,8 +44,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 if (emails.length === 0) {
                   em = ['dummy'];
                 }
-                return collectionData(
-                  query(col(this.firestore, 'profiles'), where('email', 'in', emails)),
+                return collectionData<Profile>(
+                  query(collection(this.firestore, 'profiles') as CollectionReference<Profile>,
+                    where('email', 'in', em)),
                   {
                     idField: 'email'
                   }
@@ -70,8 +68,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this._destroy.forEach(x => x.unsubscribe());
   }
 
+
   contactsSelectionChanged(event: MatSelectionListChange) {
-    this.selectedContacts = event.source.selectedOptions.selected.map(x => x.value.email);
+    this.selectedContacts = event.source.selectedOptions.selected.map(x => x.value);
   }
 
   deleteSelectedContacts() {
@@ -92,14 +91,5 @@ export class ContactsComponent implements OnInit, OnDestroy {
         user: this.user
       } as AddContactData
     });
-  }
-
-  goToConversation(p: Profile, event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.tagName.toLowerCase().includes('checkbox')) {
-      this.router.navigate(['/conversation/' + p.email]);
-      event.preventDefault();
-      event.stopPropagation();
-    }
   }
 }

@@ -8,11 +8,11 @@
     </button>
   </div>
 
-  <mat-selection-list (selectionChange)="contactsSelectionChanged($event)" #contactsList>
-    <mat-list-option (click)="goToConversation(p, $event)" [value]="p" *ngFor="let p of profiles">
-      <img [src]="p.photo" mat-list-icon />
-      <div>{{p.displayName}}</div>
-      <i class="small">{{p.email}}</i>
+  <mat-selection-list (selectionChange)="contactsSelectionChanged($event)">
+    <mat-list-option [value]="p.email" *ngFor="let p of profiles">
+      <img [routerLink]="'/conversation/' + p.email" [src]="p.photo" mat-list-icon />
+      <div [routerLink]="'/conversation/' + p.email">{{p.displayName}}</div>
+      <i [routerLink]="'/conversation/' + p.email" class="small">{{p.email}}</i>
     </mat-list-option>
   </mat-selection-list>
 </div>

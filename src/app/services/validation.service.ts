@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { FirebaseError } from '@angular/fire/app';
 import { AbstractControl } from '@angular/forms';
-import { FirebaseError } from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'

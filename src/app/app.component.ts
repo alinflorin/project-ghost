@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Auth, User } from '@angular/fire/auth';
-import { Firestore, docData, setDoc, docSnapshots } from '@angular/fire/firestore';
+import { Auth, user, User } from '@angular/fire/auth';
+import { Firestore, docData, setDoc, docSnapshots, serverTimestamp, doc } from '@angular/fire/firestore';
 import { MediaObserver } from '@angular/flex-layout';
 import { TranslateService } from '@ngx-translate/core';
-import { doc, serverTimestamp } from 'firebase/firestore';
-import { user } from 'rxfire/auth';
+
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Profile } from './models/profile';
