@@ -35,13 +35,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatListModule } from '@angular/material/list';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
+import { AddContactComponent } from './add-contact/add-contact.component';
 
 registerLocaleData(localeRO, 'ro');
 
@@ -63,7 +66,8 @@ export function httpLoaderFactory(http: HttpClient) {
     LoginComponent,
     ForgotPasswordComponent,
     SignupComponent,
-    HomeComponent
+    HomeComponent,
+    AddContactComponent
   ],
   imports: [
     SharedModule,
@@ -100,7 +104,9 @@ export function httpLoaderFactory(http: HttpClient) {
     MatDividerModule,
     MatCardModule,
     MatBadgeModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatListModule,
+    MatDialogModule
 
   ],
   providers: [
