@@ -5,14 +5,20 @@
   <img routerLink="" class="h-80 cp" src="/assets/images/logo.svg" />
   <span fxFlex="1 1 auto"></span>
   <button [matMenuTriggerFor]="menu" mat-icon-button>
-    <mat-icon>more_vert</mat-icon>
+    <mat-icon *ngIf="!user">more_vert</mat-icon>
+    <img *ngIf="user" [src]="user.photoURL" class="avatar" />
   </button>
 </mat-toolbar>
 
 <mat-menu #menu="matMenu">
+  <span mat-menu-item *ngIf="user" class="tc">{{user.displayName}}</span>
   <button [matMenuTriggerFor]="langMenu" mat-menu-item>
     <mat-icon>language</mat-icon>
     <span>{{'ui.header.language' | translate}}</span>
+  </button>
+  <button *ngIf="user" (click)="logout()" mat-menu-item>
+    <mat-icon>exit_to_app</mat-icon>
+    <span>{{'ui.header.logout' | translate}}</span>
   </button>
 </mat-menu>
 
