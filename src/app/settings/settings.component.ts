@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit {
   }
 
   disableLastSeenChanged(event: MatSlideToggleChange) {
-    this.disableLastSeen = event.checked;
+
     from(setDoc(doc(this.fireStore, `userPreferences/${this.user!.email}`), {
       disableLastSeen: event.checked
     }, {
@@ -40,7 +40,7 @@ export class SettingsComponent implements OnInit {
         })))
       )
       .subscribe(() => {
-
+        this.disableLastSeen = event.checked;
       });
   }
 
