@@ -11,6 +11,7 @@ export const environment = {
       code: 'ro'
     }
   ],
+  hb: 10000,
   firebase: {
     apiKey: "AIzaSyBBlm1FykI_UPgn3LVuPSiIgRMfkh8Nh3c",
     authDomain: "project-ghost-af.firebaseapp.com",

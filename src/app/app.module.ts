@@ -37,8 +37,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatBadgeModule } from '@angular/material/badge';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { SignupComponent } from './signup/signup.component';
+import { HomeComponent } from './home/home.component';
 
 registerLocaleData(localeRO, 'ro');
 
@@ -59,7 +61,8 @@ export function httpLoaderFactory(http: HttpClient) {
     ConversationComponent,
     LoginComponent,
     ForgotPasswordComponent,
-    SignupComponent
+    SignupComponent,
+    HomeComponent
   ],
   imports: [
     SharedModule,
@@ -94,7 +97,8 @@ export function httpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     MatSidenavModule,
     MatDividerModule,
-    MatCardModule
+    MatCardModule,
+    MatBadgeModule
 
   ],
   providers: [

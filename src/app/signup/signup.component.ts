@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { from } from 'rxjs';
+import { from, switchMap } from 'rxjs';
 import { ValidationService } from '../services/validation.service';
 
 @Component({
@@ -52,18 +52,24 @@ export class SignupComponent implements OnInit, OnDestroy {
   signup() {
     from(createUserWithEmailAndPassword(
       this.auth, this.form.value.email, this.form.value.password
-    )).subscribe({
-      next: () => {
-        this.router.navigate(['/login'], {
-          queryParams: {
-            message: `ui.login.accountCreatedPleaseLogin`
-          }
-        });
-      },
-      error: e => {
-        this.validationService.addFirebaseErrorsToForm(e, this.form);
-      }
-    });
+    ))
+      .pipe(
+        switchMap((u) => from(updateProfile(u.user, {
+          displayName: this.form.value.firstName + ' ' + this.form.value.lastName
+        })))
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login'], {
+            queryParams: {
+              message: `ui.login.accountCreatedPleaseLogin`
+            }
+          });
+        },
+        error: e => {
+          this.validationService.addFirebaseErrorsToForm(e, this.form);
+        }
+      });
   }
 
 }

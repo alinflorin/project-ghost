@@ -1,1 +1,13 @@
-<p>sidenav works!</p>
+<div fxFlexFill fxLayout="column" fxLayoutGap="1rem">
+  <button mat-raised-button (click)="closeSidenav($event)" routerLink="/dashboard" routerLinkActive="mat-accent" color="primary">
+    {{'ui.nav.dashboard' | translate}}
+  </button>
+
+  <button mat-raised-button (click)="closeSidenav($event)" routerLink="/contacts" routerLinkActive="mat-accent" color="primary">
+    {{'ui.nav.contacts' | translate}}
+  </button>
+
+  <button mat-raised-button (click)="closeSidenav($event)" routerLink="/settings" routerLinkActive="mat-accent" color="primary">
+    {{'ui.nav.settings' | translate}}
+  </button>
+</div>

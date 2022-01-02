@@ -1,10 +1,10 @@
 <div fxLayout="column" class="w-100 h-100" id="wrapper">
-  <app-header [drawer]="drawer" [isMobile]="isMobile"></app-header>
+  <app-header [profile]="profile" [user]="user" [drawer]="drawer" [isMobile]="isMobile"></app-header>
   <mat-divider></mat-divider>
   <div fxFlex="1 1 auto" class="mh-0" id="content">
-    <mat-drawer-container fxFlex="1 1 auto">
+    <mat-drawer-container [autosize]="true" fxFlex="1 1 auto">
       <mat-drawer class="p-1" #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">
-        <app-sidenav></app-sidenav>
+        <app-sidenav [drawer]="drawer"></app-sidenav>
       </mat-drawer>
       <mat-drawer-content fxLayout="column" class="p-1 mh-0" fxFlex="1 1 auto">
         <router-outlet></router-outlet>

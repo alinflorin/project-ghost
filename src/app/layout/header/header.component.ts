@@ -4,6 +4,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Subscription } from 'rxjs';
+import { Profile } from 'src/app/models/profile';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -13,27 +14,22 @@ import { environment } from 'src/environments/environment';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   @Input('isMobile') isMobile = false;
+  @Input('profile') profile: Profile | undefined;
   @Input('drawer') drawer: MatDrawer | undefined;
-  allLanguages = environment.availableLanguages;
-  private _destroy: Subscription[] = [];
-  user: User | null = null;
+  @Input('user') user: User | null = null;
 
-  constructor(public translateService: TranslateService, private auth: Auth, private router: Router) { }
+  allLanguages = environment.availableLanguages;
+  constructor(public translateService: TranslateService, private router: Router, private auth: Auth) { }
 
   ngOnInit(): void {
-    this._destroy.push(
-      user(this.auth).subscribe(u => {
-        this.user = u;
-      })
-    );
   }
 
   ngOnDestroy(): void {
-    this._destroy.forEach(x => x.unsubscribe());
   }
 
   changeLanguage(code: string) {
-    this.translateService.use(code);
+    localStorage.setItem('lang', code);
+    this.translateService.use(code).subscribe();
   }
 
   toggleDrawer() {

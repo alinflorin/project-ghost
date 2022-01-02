@@ -61,3 +61,7 @@ body {
 .tc {
   text-align: center !important;
 }
+
+.mat-badge.hide-text .mat-badge-content {
+  color: transparent;
+}

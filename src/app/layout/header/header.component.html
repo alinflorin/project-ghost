@@ -4,7 +4,8 @@
   </button>
   <img routerLink="" class="h-80 cp" src="/assets/images/logo.svg" />
   <span fxFlex="1 1 auto"></span>
-  <button [matMenuTriggerFor]="menu" mat-icon-button>
+  <button class="hide-text" [matBadgeHidden]="profile?.lastSeen == null" [matBadgeOverlap]="true" matBadgePosition="below after"
+    matBadge="." matBadgeColor="primary" matBadgeSize="small" [matMenuTriggerFor]="menu" mat-icon-button>
     <mat-icon *ngIf="!user">more_vert</mat-icon>
     <img *ngIf="user" [src]="user.photoURL" class="avatar" />
   </button>
@@ -24,6 +25,7 @@
 
 <mat-menu #langMenu="matMenu">
   <button (click)="changeLanguage(l.code)" *ngFor="let l of allLanguages" mat-menu-item>
+    <mat-icon>home</mat-icon>
     <span [style.fontWeight]="translateService.currentLang === l.code ? 700 : 400">{{l.label}}</span>
   </button>
 </mat-menu>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-sidenav',
@@ -6,10 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
+  @Input('drawer') drawer: MatDrawer | undefined;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  closeSidenav(e: MouseEvent) {
+    if (this.drawer?.mode === 'over') {
+      this.drawer?.close().then();
+    }
+  }
 }
