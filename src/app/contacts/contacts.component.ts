@@ -12,6 +12,7 @@ import { ConfirmationService } from '../shared/confirmation/services/confirmatio
 import { MatDialog } from '@angular/material/dialog';
 import { AddContactComponent } from '../add-contact/add-contact.component';
 import { AddContactData } from '../add-contact/add-contact-data';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contacts',
@@ -26,7 +27,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   private user: User | null = null;
 
   constructor(private auth: Auth, private firestore: Firestore, private confirmationService: ConfirmationService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
     this._destroy.push(
@@ -86,16 +87,19 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   openAddContact() {
-    const dialogRef = this.dialog.open(AddContactComponent, {
+    this.dialog.open(AddContactComponent, {
       data: {
         user: this.user
       } as AddContactData
     });
-    dialogRef.afterClosed().subscribe(r => {
-      if (!r) {
-        return;
-      }
-      console.log(r);
-    });
+  }
+
+  goToConversation(p: Profile, event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.tagName.toLowerCase().includes('checkbox')) {
+      this.router.navigate(['/conversation/' + p.email]);
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 }

@@ -9,7 +9,7 @@
   </div>
 
   <mat-selection-list (selectionChange)="contactsSelectionChanged($event)" #contactsList>
-    <mat-list-option [value]="p" *ngFor="let p of profiles">
+    <mat-list-option (click)="goToConversation(p, $event)" [value]="p" *ngFor="let p of profiles">
       <img [src]="p.photo" mat-list-icon />
       <div>{{p.displayName}}</div>
       <i class="small">{{p.email}}</i>

@@ -84,7 +84,8 @@
       "cancel": "Cancel",
       "invalidEmail": "Invalid email",
       "emailDoesntExist": "Email doesn't exist",
-      "contactAdded": "Contact added"
+      "contactAdded": "Contact added",
+      "emailRequired": "Email required"
     },
     "conversation": {
       "lastSeenAt": "Last seen",

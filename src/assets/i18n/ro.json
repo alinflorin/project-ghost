@@ -84,7 +84,8 @@
       "cancel": "Anulare",
       "invalidEmail": "Email invalid",
       "emailDoesntExist": "Email-ul nu există",
-      "contactAdded": "Contact adăugat"
+      "contactAdded": "Contact adăugat",
+      "emailRequired": "Email obligatoriu"
     },
     "conversation": {
       "lastSeenAt": "Văzut la",
