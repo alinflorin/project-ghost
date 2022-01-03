@@ -8,4 +8,5 @@ export interface RsaWorkerMessage {
   type: RsaMessageType;
   data: any | undefined;
   id?: string;
+  isError?: boolean;
 }

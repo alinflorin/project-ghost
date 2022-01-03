@@ -62,6 +62,7 @@ addEventListener('message', ({ data }) => {
     postMessage(rObj);
   } catch (err: any) {
     err.id = data.id;
-    throw err;
+    err.isError = true;
+    postMessage(err);
   }
 });

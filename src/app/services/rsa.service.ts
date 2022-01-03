@@ -14,9 +14,15 @@ export class RsaService {
     this.worker = new Worker(new URL('../workers/rsa.worker', import.meta.url));
 
     this.worker.onmessage = ({ data }) => {
-      this.subjects.get(data.id)?.next(data);
-      this.subjects.get(data.id)?.complete();
-      this.subjects.delete(data.id);
+      if (data.isError) {
+        this.subjects.get(data.id)?.error(data);
+        this.subjects.get(data.id)?.complete();
+        this.subjects.delete(data.id);
+      } else {
+        this.subjects.get(data.id)?.next(data);
+        this.subjects.get(data.id)?.complete();
+        this.subjects.delete(data.id);
+      }
     };
     this.worker.onerror = (e: any) => {
       if (e.id) {

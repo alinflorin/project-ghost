@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Auth, User, user } from '@angular/fire/auth';
 import {
-  addDoc, collection, collectionData, CollectionReference, doc, docData,
+  addDoc, collection, collectionData, CollectionReference, collectionSnapshots, doc, docData,
   Firestore, orderBy, query, serverTimestamp
 } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, from, map, Subscription } from 'rxjs';
+import { catchError, forkJoin, from, map, of, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Profile } from '../models/profile';
@@ -168,12 +168,15 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   private subscribeToMessages() {
     this._destroy.push(
-      collectionData(
+      collectionSnapshots(
         query(collection(this.firestore, `conversations/${this.getConvId()}/messages`) as CollectionReference<Message>,
           orderBy(`sentDate`, `asc`)
-        ), { idField: 'id' }
+        )
       ).subscribe(msg => {
-        const observables = msg.filter(x => this.messages.findIndex(z => z.id === x.id) === -1)
+        if (msg.some(x => x.metadata.hasPendingWrites)) {
+          return;
+        }
+        const observables = msg.map(x => ({ ...x.data(), id: x.id })).filter(x => this.messages.findIndex(z => z.id === x.id) === -1)
           .map(m => this.rsaService.sendAndGetResponse({
             data: {
               encrypted: m.content,
@@ -181,7 +184,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
             },
             type: RsaMessageType.Decrypt
           }).pipe(
-            map(x => {
+            catchError(() => {
+              return of<any>({
+                error: true,
+                m: m
+              });
+            }),
+            map((x: any) => {
               (x as any).m = m;
               return x;
             })
@@ -190,8 +199,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
           const list: Message[] = [...this.messages];
           rsaMessages.forEach(x => {
             const msg = (x as any).m as Message;
-            msg.content = x.data;
-            msg.decrypted = true;
+            if ((x as any).error) {
+              msg.content = '';
+              msg.decrypted = false;
+            } else {
+              msg.content = x.data;
+              msg.decrypted = true;
+            }
             list.push(msg);
           });
           this.messages = list;

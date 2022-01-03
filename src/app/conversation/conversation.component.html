@@ -20,16 +20,24 @@
       <mat-card-subtitle></mat-card-subtitle>
     </mat-card-header>
   </mat-card>
-  <div *ngIf="key != null" fxFlex="1 1 auto" class="mh-0 oa" #messagesWrapper>
-    <mat-card *ngFor="let m of messages" [ngClass]="{
-      me: m.from === user!.email,
-      friend: m.from === friendEmail
-    }">
-      <mat-card-content>
-        <p *ngIf="m.decrypted">{{m.content}}</p>
-        <p *ngIf="!m.decrypted">{{'ui.conversation.unreadable' | translate}}</p>
-      </mat-card-content>
-    </mat-card>
+  <div fxLayout="column" fxLayoutAlign="flex-start flex-start" fxLayoutGap="1rem" *ngIf="key != null" fxFlex="1 1 auto" class="mh-0 oa"
+    id="messagesWrapper" #messagesWrapper>
+    <div *ngFor="let m of messages" class="w-100 card-wrapper" fxLayout="row"
+      [fxLayoutAlign]="m.from === user!.email ? 'flex-end center' : 'flex-start center'">
+      <mat-card [ngClass]="{
+            me: m.from === user!.email,
+            friend: m.from === friendEmail
+          }">
+        <mat-card-content [fxLayout]="m.from === user!.email ? 'row-reverse' : 'row'" fxLayoutAlign="flex-start center" fxLayoutGap="1rem">
+          <img class="rounded" [src]="m.from === user!.email ? user!.photoURL : friendProfile!.photo" />
+          <div fxFlex="1 1 auto" fxLayout="column">
+            <p *ngIf="m.decrypted">{{m.content}}</p>
+            <p *ngIf="!m.decrypted">{{'ui.conversation.unreadable' | translate}}</p>
+            <i class="small">{{m.sentDate?.toDate() | date:'medium'}}</i>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
   <div *ngIf="key == null" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="center center" class="mh-0 oa">
     <form (submit)="saveKey()" fxLayout="column" fxLayoutAlign="flex-start center" [formGroup]="keyForm">
