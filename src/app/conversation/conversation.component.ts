@@ -210,8 +210,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
           });
           this.messages = list;
           setTimeout(() => {
-            this.messagesWrapper!.nativeElement.scroll({ top: this.messagesWrapper!.nativeElement.scrollHeight });
-          });
+            this.messagesWrapper!.nativeElement.scroll({ top: this.messagesWrapper!.nativeElement.scrollHeight * 2 });
+          }, 10);
         });
       })
     );
