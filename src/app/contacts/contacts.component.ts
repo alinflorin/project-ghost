@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddContactComponent } from '../add-contact/add-contact.component';
 import { AddContactData } from '../add-contact/add-contact-data';
 import { ToastService } from '../shared/toast/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-contacts',
@@ -22,6 +23,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   private _destroy: Subscription[] = [];
   private user: User | null = null;
+  private refreshInterval: any | undefined;
 
   constructor(private auth: Auth, private firestore: Firestore,
     private toastService: ToastService,
@@ -73,9 +75,20 @@ export class ContactsComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.refreshInterval = setInterval(() => {
+      if (this.profiles == null) {
+        return;
+      }
+      this.profiles = [...this.profiles];
+    }, environment.hb);
   }
 
   ngOnDestroy(): void {
+    if (this.refreshInterval != null) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = undefined;
+    }
     this._destroy.forEach(x => x.unsubscribe());
   }
 
@@ -109,5 +122,17 @@ export class ContactsComponent implements OnInit, OnDestroy {
         user: this.user
       } as AddContactData
     });
+  }
+
+  isOnline(p: Profile) {
+    if (p.lastSeen == null) {
+      return false;
+    }
+    const now = new Date().getTime();
+    const then = p.lastSeen!.toDate().getTime();
+    if (now - then > environment.hb) {
+      return false;
+    }
+    return true;
   }
 }

@@ -10,7 +10,10 @@
 
   <mat-selection-list (selectionChange)="contactsSelectionChanged($event)">
     <mat-list-option [value]="p.email" *ngFor="let p of profiles">
-      <img [routerLink]="'/conversation/' + p.email" [src]="p.photo" mat-list-icon />
+      <button [routerLink]="'/conversation/' + p.email" class="hide-text" [matBadgeHidden]="!isOnline(p!)" [matBadgeOverlap]="true"
+        matBadgePosition="below after" matBadge="." matBadgeColor="primary" matBadgeSize="small" mat-list-icon mat-icon-button>
+        <img [src]="p.photo" class="h-100 d-block rounded" />
+      </button>
       <div [routerLink]="'/conversation/' + p.email">{{p.displayName}}</div>
       <i [routerLink]="'/conversation/' + p.email" class="small">{{p.email}}</i>
     </mat-list-option>
