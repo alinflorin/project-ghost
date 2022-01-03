@@ -6,26 +6,39 @@ import { RsaWorkerMessage } from '../models/rsa-worker-message';
   providedIn: 'root'
 })
 export class RsaService {
+  private i = 0;
   private worker: Worker;
-  private workerSubject = new Subject<any>();
+  private subjects = new Map<string, Subject<RsaWorkerMessage>>();
+
   constructor() {
     this.worker = new Worker(new URL('../workers/rsa.worker', import.meta.url));
 
     this.worker.onmessage = ({ data }) => {
-      this.workerSubject.next(data);
+      this.subjects.get(data.id)?.next(data);
+      this.subjects.get(data.id)?.complete();
+      this.subjects.delete(data.id);
     };
-    this.worker.onerror = e => {
-      this.workerSubject.error(e);
+    this.worker.onerror = (e: any) => {
+      if (e.id) {
+        this.subjects.get(e.id)?.error(e);
+        this.subjects.get(e.id)?.complete();
+        this.subjects.delete(e.id);
+      }
     };
   }
 
-  asObservable() {
-    return this.workerSubject.asObservable().pipe(
-      map(x => x as RsaWorkerMessage)
-    );
-  }
-
-  send(msg: RsaWorkerMessage) {
+  sendAndGetResponse(msg: RsaWorkerMessage) {
+    msg.id = this.generateId();
+    const subj = new Subject<RsaWorkerMessage>();
+    this.subjects.set(msg.id, subj);
     this.worker.postMessage(msg);
+    return subj.asObservable();
+  }
+
+  private generateId() {
+    if (this.i >= 1000000) {
+      this.i = -1;
+    }
+    return `${++this.i}`;
   }
 }

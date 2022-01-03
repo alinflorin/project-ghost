@@ -7,4 +7,5 @@ export interface Message {
   sentDate: Timestamp;
   seenDate: Timestamp | null;
   content: string;
+  decrypted?: boolean;
 }

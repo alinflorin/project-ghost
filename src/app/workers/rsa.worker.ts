@@ -25,32 +25,43 @@ const api = cryptico.cryptico;
 })(api);
 
 addEventListener('message', ({ data }) => {
-  let r = null;
-  switch (data.type) {
-    case 0:
-      const rsaKeyBits = api.generateRSAKey(data.data.passphrase, 512);
-      r = {
-        type: 1,
-        data: {
+  try {
+    let r: any = null;
+    switch (data.type) {
+      case 0:
+        const rsaKeyBits = api.generateRSAKey(data.data.passphrase, 512);
+        r = {
           rsaKey: api.privateKeyString(rsaKeyBits),
           publicKey: api.publicKeyString(rsaKeyBits)
-        }
-      };
-      break;
+        };
+        break;
 
-    case 2:
-      const rsaKey = api.privateKeyFromString(data.data.bundle.rsaKey);
-      const encoded = api.encrypt(data.data.text, data.data.bundle.publicKey, rsaKey);
-      if (encoded.status !== 'success') {
-        throw 'Encryption failed';
-      }
-      r = {
-        type: 3,
-        data: encoded.cipher
-      };
-      break;
-    default:
-      throw 'Unknown message';
+      case 1:
+        const rsaKey = api.privateKeyFromString(data.data.bundle.rsaKey);
+        const encoded = api.encrypt(data.data.text, data.data.bundle.publicKey, rsaKey);
+        if (encoded.status !== 'success') {
+          throw { error: 'Encryption failed' };
+        }
+        r = encoded.cipher;
+        break;
+
+      case 2:
+        const rsaKey2 = api.privateKeyFromString(data.data.bundle.rsaKey);
+        const decoded = api.decrypt(data.data.encrypted, rsaKey2);
+        if (decoded.status !== 'success') {
+          throw { error: 'Decryption failed' };
+        }
+        r = decoded.plaintext;
+        break;
+      default:
+        throw { error: 'Unknown message' };
+    }
+    const rObj: any = {};
+    rObj.data = r;
+    rObj.id = data.id;
+    postMessage(rObj);
+  } catch (err: any) {
+    err.id = data.id;
+    throw err;
   }
-  postMessage(r);
 });

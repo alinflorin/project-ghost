@@ -20,10 +20,14 @@
       <mat-card-subtitle></mat-card-subtitle>
     </mat-card-header>
   </mat-card>
-  <div *ngIf="key != null" fxFlex="1 1 auto" class="mh-0 oa">
-    <mat-card *ngFor="let m of messages">
+  <div *ngIf="key != null" fxFlex="1 1 auto" class="mh-0 oa" #messagesWrapper>
+    <mat-card *ngFor="let m of messages" [ngClass]="{
+      me: m.from === user!.email,
+      friend: m.from === friendEmail
+    }">
       <mat-card-content>
-        <p>{{m.content}}</p>
+        <p *ngIf="m.decrypted">{{m.content}}</p>
+        <p *ngIf="!m.decrypted">{{'ui.conversation.unreadable' | translate}}</p>
       </mat-card-content>
     </mat-card>
   </div>

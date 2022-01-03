@@ -1,11 +1,11 @@
 export enum RsaMessageType {
-  GenerateKeyRequest = 0,
-  GenerateKeyResponse = 1,
-  EncryptRequest = 2,
-  EncryptResponse = 3
+  GenerateKey = 0,
+  Encrypt = 1,
+  Decrypt = 2
 }
 
 export interface RsaWorkerMessage {
   type: RsaMessageType;
   data: any | undefined;
+  id?: string;
 }
