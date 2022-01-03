@@ -1,1 +1,48 @@
-<p>conversation works!</p>
+<div class="h-100 w-100" fxLayout="column" fxLayoutGap="1rem">
+  <mat-card>
+    <mat-card-header fxLayout="row" fxLayoutAlign="flex-start center">
+      <button mat-card-avatar class="hide-text" [matBadgeHidden]="!isFriendOnline()" [matBadgeOverlap]="true" matBadgePosition="below after"
+        matBadge="." matBadgeColor="primary" matBadgeSize="small" mat-icon-button>
+        <img [src]="friendProfile?.photo" class="h-100 d-block rounded" />
+      </button>
+      <mat-card-title>
+        {{friendProfile?.displayName}}
+      </mat-card-title>
+      <mat-card-subtitle>
+        <div *ngIf="friendProfile == null || (!isFriendOnline() && friendProfile.lastSeen == null)">
+          {{'ui.conversation.offline' | translate}}
+        </div>
+        <div *ngIf="friendProfile && isFriendOnline()">{{'ui.conversation.online' | translate}}</div>
+        <div *ngIf="friendProfile && !isFriendOnline() && friendProfile.lastSeen != null">{{'ui.conversation.lastSeenAt' | translate}}
+          {{friendProfile!.lastSeen!.toDate() | date:'medium'}}
+        </div>
+      </mat-card-subtitle>
+      <mat-card-subtitle></mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+  <div *ngIf="key != null" fxFlex="1 1 auto" class="mh-0 oa">
+    messages
+  </div>
+  <div *ngIf="key == null" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="center center" class="mh-0 oa">
+    <form (submit)="saveKey()" fxLayout="column" fxLayoutAlign="flex-start center" [formGroup]="keyForm">
+      <mat-form-field class="mff-p0" appearance="outline">
+        <mat-label>{{'ui.conversation.key' | translate}}</mat-label>
+        <input type="text" matInput formControlName="key" />
+      </mat-form-field>
+      <br />
+      <mat-slide-toggle formControlName="persist">{{'ui.conversation.persist' | translate}}</mat-slide-toggle>
+      <br />
+      <button [disabled]="keyForm.invalid" color="accent" mat-raised-button>
+        {{'ui.conversation.go' | translate}}
+      </button>
+    </form>
+  </div>
+  <form [formGroup]="sendForm" class="w-100" fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="flex-start center">
+    <mat-form-field fxFlex="1 1 auto" appearance="outline" class="mff-p0">
+      <textarea matInput formControlName="text"></textarea>
+    </mat-form-field>
+    <button [disabled]="sendForm.get('text')!.value == null || sendForm.get('text')!.value === ''" mat-icon-button color="accent">
+      <mat-icon>send</mat-icon>
+    </button>
+  </form>
+</div>

@@ -77,3 +77,10 @@ body {
 .rounded {
   border-radius: 50%;
 }
+
+mat-form-field.mff-p0 {
+  padding: 0 !important;
+  .mat-form-field-wrapper {
+    padding: 0 !important;
+  }
+}
