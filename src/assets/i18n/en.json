@@ -84,7 +84,6 @@
       "cancel": "Cancel",
       "invalidEmail": "Invalid email",
       "emailDoesntExist": "Email doesn't exist",
-      "contactAdded": "Contact added",
       "emailRequired": "Email required"
     },
     "conversation": {
@@ -108,6 +107,13 @@
       "severity_warn": "Warning",
       "severity_info": "Information",
       "severity_success": "Success"
+    },
+    "update": {
+      "updatesNotAvailable": "Updates not available",
+      "unrecoverable": "Updates fatal error",
+      "installFailed": "Installation failed",
+      "newVersionDetected": "New version detected",
+      "versionDownloadedInstallNow": "Version downloaded. Install now?"
     }
   }
 }

@@ -4,6 +4,7 @@ import { doc, docData, Firestore, serverTimestamp, setDoc } from '@angular/fire/
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { from, switchMap, take } from 'rxjs';
 import { UserPreferences } from '../models/user-preferences';
+import { ToastService } from '../shared/toast/services/toast.service';
 
 @Component({
   selector: 'app-settings',
@@ -14,14 +15,19 @@ export class SettingsComponent implements OnInit {
   disableLastSeen: boolean | undefined;
   private user: User | null = null;
 
-  constructor(private fireStore: Firestore, private auth: Auth) { }
+  constructor(private fireStore: Firestore, private auth: Auth, private toastService: ToastService) { }
 
   ngOnInit(): void {
     user(this.auth).pipe(take(1)).subscribe(u => {
       this.user = u;
-      docData<UserPreferences>(doc(this.fireStore, `userPreferences/${u!.email}`), { idField: 'email' }).pipe(take(1)).subscribe(up => {
-        this.disableLastSeen = up?.disableLastSeen;
-      });
+      docData<UserPreferences>(doc(this.fireStore, `userPreferences/${u!.email}`), { idField: 'email' })
+        .pipe(take(1)).subscribe({
+          next: up => {
+            this.disableLastSeen = up?.disableLastSeen;
+          }, error: e => {
+            this.toastService.fromFirebaseError(e);
+          }
+        });
     });
   }
 
@@ -39,8 +45,13 @@ export class SettingsComponent implements OnInit {
           merge: true
         })))
       )
-      .subscribe(() => {
-        this.disableLastSeen = event.checked;
+      .subscribe({
+        next: () => {
+          this.disableLastSeen = event.checked;
+        },
+        error: e => {
+          this.toastService.fromFirebaseError(e);
+        }
       });
   }
 

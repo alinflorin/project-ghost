@@ -4,12 +4,13 @@ import { Firestore, docData, setDoc, docSnapshots, serverTimestamp, doc } from '
 import { MediaObserver } from '@angular/flex-layout';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Profile } from './models/profile';
 import { UserPreferences } from './models/user-preferences';
 import { LocaleService } from './services/locale.service';
 import { UpdateService } from './services/update.service';
+import { ToastService } from './shared/toast/services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private localeService: LocaleService, private translateService: TranslateService,
     private mediaObserver: MediaObserver, private firestore: Firestore,
+    private toastService: ToastService,
     private auth: Auth,
     private updateService: UpdateService) {
     let lang = environment.defaultLanguage;
@@ -47,56 +49,68 @@ export class AppComponent implements OnInit, OnDestroy {
     );
 
     this._destroy.push(
-      user(this.auth).subscribe(user => {
-        this.user = user;
-        if (user) {
-          this.profileSub = docSnapshots<Profile>(doc(this.firestore, `profiles/${user!.email}`)).subscribe(ds => {
-            if (ds.metadata.hasPendingWrites) {
-              return;
-            }
-            this.profile = ds.data();
-            this.profile!.email = ds.id;
-          });
-
-          this.upSub = docData<UserPreferences>(doc(this.firestore, `userPreferences/${user.email}`), {
-            idField: 'email'
-          }).subscribe(up => {
-            if (up?.disableLastSeen) {
-              this.disableLastSeen = true;
-            } else {
-              this.disableLastSeen = false;
-            }
-
-            if (!this.preferencesReadFirstTime) {
-              this.preferencesReadFirstTime = true;
-              if (up?.lang) {
-                this.translateService.use(up.lang).subscribe();
+      user(this.auth).subscribe({
+        next: user => {
+          this.user = user;
+          if (user) {
+            this.profileSub = docSnapshots<Profile>(doc(this.firestore, `profiles/${user!.email}`)).subscribe({
+              next: ds => {
+                if (ds.metadata.hasPendingWrites) {
+                  return;
+                }
+                this.profile = ds.data();
+                this.profile!.email = ds.id;
+              }, error: e => {
+                this.toastService.fromFirebaseError(e);
               }
+            });
 
-              this.hb();
-              this.hbInterval = setInterval(() => {
-                this.hb();
-              }, environment.hb);
+            this.upSub = docData<UserPreferences>(doc(this.firestore, `userPreferences/${user.email}`), {
+              idField: 'email'
+            }).subscribe({
+              next: up => {
+                if (up?.disableLastSeen) {
+                  this.disableLastSeen = true;
+                } else {
+                  this.disableLastSeen = false;
+                }
 
+                if (!this.preferencesReadFirstTime) {
+                  this.preferencesReadFirstTime = true;
+                  if (up?.lang) {
+                    this.translateService.use(up.lang).subscribe();
+                  }
+
+                  this.hb();
+                  this.hbInterval = setInterval(() => {
+                    this.hb();
+                  }, environment.hb);
+
+                }
+              }, error: e => {
+                this.toastService.fromFirebaseError(e);
+              }
+            });
+            this._destroy.push(
+              this.upSub
+            );
+            this._destroy.push(
+              this.profileSub
+            );
+          } else {
+            if (this.upSub) {
+              this.upSub.unsubscribe();
             }
-          });
-          this._destroy.push(
-            this.upSub
-          );
-          this._destroy.push(
-            this.profileSub
-          );
-        } else {
-          if (this.upSub) {
-            this.upSub.unsubscribe();
+            if (this.profileSub) {
+              this.profileSub.unsubscribe();
+            }
+            if (this.hbInterval) {
+              clearInterval(this.hbInterval);
+              this.hbInterval = undefined;
+            }
           }
-          if (this.profileSub) {
-            this.profileSub.unsubscribe();
-          }
-          if (this.hbInterval) {
-            clearInterval(this.hbInterval);
-            this.hbInterval = undefined;
-          }
+        }, error: e => {
+          this.toastService.fromFirebaseError(e);
         }
       })
     );
@@ -114,13 +128,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private hb() {
-    setDoc<Profile>(doc(this.firestore, `profiles/${this.user!.email}`), {
+    from(setDoc<Profile>(doc(this.firestore, `profiles/${this.user!.email}`), {
       displayName: this.user!.displayName,
       email: this.user!.email,
       lastSeen: this.disableLastSeen ? null : (serverTimestamp() as any),
       photo: this.user!.photoURL
     } as Partial<Profile>, {
       merge: true
-    }).then();
+    })).subscribe({
+      next: () => {
+
+      },
+      error: e => {
+        this.toastService.fromFirebaseError(e);
+      }
+    });
   }
 }

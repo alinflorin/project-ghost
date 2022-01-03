@@ -1,7 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { FirestoreError } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastData } from '../models/toast-data';
@@ -47,5 +47,20 @@ export class ToastService {
       } as ToastData
     });
     return sub.asObservable();
+  }
+
+  fromFirebaseError(err: any) {
+    if (err == null) {
+      return;
+    }
+    if (err.code != null) {
+      this.showError(this.translateService.instant(`ui.errors.firebase.${err.code}`));
+      return;
+    }
+    if (err.message != null) {
+      this.showError(err.message);
+      return;
+    }
+    this.showError(this.translateService.instant('ui.errors.unknown'));
   }
 }

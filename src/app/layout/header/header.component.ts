@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Subscription } from 'rxjs';
 import { Profile } from 'src/app/models/profile';
+import { ToastService } from 'src/app/shared/toast/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -19,7 +20,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Input('user') user: User | null = null;
 
   allLanguages = environment.availableLanguages;
-  constructor(public translateService: TranslateService, private router: Router, private auth: Auth) { }
+  constructor(public translateService: TranslateService,
+    private toastService: ToastService,
+    private router: Router, private auth: Auth) { }
 
   ngOnInit(): void {
   }
@@ -40,6 +43,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     from(signOut(this.auth)).subscribe({
       next: () => {
         this.router.navigate(['login']);
+      },
+      error: e => {
+        this.toastService.fromFirebaseError(e);
       }
     });
   }

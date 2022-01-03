@@ -84,7 +84,6 @@
       "cancel": "Anulare",
       "invalidEmail": "Email invalid",
       "emailDoesntExist": "Email-ul nu există",
-      "contactAdded": "Contact adăugat",
       "emailRequired": "Email obligatoriu"
     },
     "conversation": {
@@ -107,6 +106,13 @@
       "severity_warn": "Avertizare",
       "severity_info": "Informație",
       "severity_success": "Succes"
+    },
+    "update": {
+      "updatesNotAvailable": "Nu sunt disponibile actualizări",
+      "unrecoverable": "Eroare fatală actualizări",
+      "installFailed": "Instalarea a eșuat",
+      "newVersionDetected": "Versiune nouă detectată",
+      "versionDownloadedInstallNow": "Versiune descărcată. Instalați acum?"
     }
   }
 }
