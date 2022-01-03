@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Profile } from '../models/profile';
+import { RsaMessageType } from '../models/rsa-worker-message';
+import { RsaService } from '../services/rsa.service';
 import { ToastService } from '../shared/toast/services/toast.service';
 
 @Component({
@@ -23,6 +25,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   user: User | null = null;
   messages: Message[] | undefined;
   key: string | null = null;
+  isLoading = false;
 
   sendForm = new FormGroup({
     text: new FormControl()
@@ -34,9 +37,24 @@ export class ConversationComponent implements OnInit, OnDestroy {
   });
 
   constructor(private actRoute: ActivatedRoute, private toastService: ToastService,
-    private auth: Auth, private firestore: Firestore, private translateService: TranslateService) { }
+    private auth: Auth, private firestore: Firestore, private translateService: TranslateService,
+    private rsaService: RsaService) { }
 
   ngOnInit(): void {
+    this._destroy.push(
+      this.rsaService.asObservable().subscribe({
+        next: rsaMessage => {
+
+          this.isLoading = false;
+
+          console.log(rsaMessage);
+        },
+        error: e => {
+
+        }
+      })
+    );
+
     this._destroy.push(
       this.actRoute.params.subscribe(p => {
         this.friendEmail = p['friendEmail'];
@@ -73,7 +91,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   saveKey() {
-
+    this.isLoading = true;
+    this.rsaService.send({
+      type: RsaMessageType.GenerateKeyRequest,
+      data: {
+        passphrase: this.keyForm.value.key
+      }
+    });
   }
 
   isFriendOnline() {
