@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Profile } from '../models/profile';
+import { RsaBundle } from '../models/rsa-bundle';
 import { RsaMessageType } from '../models/rsa-worker-message';
 import { RsaService } from '../services/rsa.service';
 import { ToastService } from '../shared/toast/services/toast.service';
@@ -24,7 +25,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   private refreshInterval: any | undefined;
   user: User | null = null;
   messages: Message[] | undefined;
-  key: string | null = null;
+  key: RsaBundle | undefined;
   isLoading = false;
 
   sendForm = new FormGroup({
@@ -45,9 +46,15 @@ export class ConversationComponent implements OnInit, OnDestroy {
       this.rsaService.asObservable().subscribe({
         next: rsaMessage => {
 
-          this.isLoading = false;
-
-          console.log(rsaMessage);
+          switch (rsaMessage.type) {
+            case RsaMessageType.GenerateKeyResponse:
+              const bundle = rsaMessage.data as RsaBundle;
+              if (this.keyForm.value.persist) {
+                localStorage.setItem('key_' + this.friendEmail, JSON.stringify(bundle));
+              }
+              this.key = bundle;
+              break;
+          }
         },
         error: e => {
 
@@ -58,8 +65,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this._destroy.push(
       this.actRoute.params.subscribe(p => {
         this.friendEmail = p['friendEmail'];
-        this.key = localStorage.getItem('key_' + this.friendEmail);
-
+        const lsKey = localStorage.getItem('key_' + this.friendEmail);
+        if (lsKey != null) {
+          this.key = JSON.parse(lsKey) as RsaBundle;
+        }
         this._destroy.push(
           user(this.auth).subscribe(u => {
             this.user = u;

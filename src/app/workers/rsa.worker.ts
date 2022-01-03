@@ -26,10 +26,9 @@ const api = cryptico.cryptico;
 
 addEventListener('message', ({ data }) => {
   let r = null;
-  console.log(data);
   switch (data.type) {
     case 0:
-      const rsaKeyBits = api.generateRSAKey(data.data.passphrase, 1024);
+      const rsaKeyBits = api.generateRSAKey(data.data.passphrase, 512);
       r = {
         type: 1,
         data: {
@@ -41,6 +40,5 @@ addEventListener('message', ({ data }) => {
     default:
       throw 'Unknown message';
   }
-  console.log(r);
   postMessage(r);
 });
