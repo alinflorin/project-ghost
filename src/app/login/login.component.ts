@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   socialProviders = SocialProvider;
 
-  private returnTo = '/';
+  private returnTo = '/dashboard';
 
   message: string | undefined;
 
