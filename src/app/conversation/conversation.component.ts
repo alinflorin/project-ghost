@@ -87,15 +87,15 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this._destroy.push(
       this.actRoute.params.subscribe(p => {
         this.friendEmail = p['friendEmail'];
-        const lsKey = localStorage.getItem('key_' + this.friendEmail);
-        if (lsKey != null) {
-          this.key = JSON.parse(lsKey) as RsaBundle;
-          this.subscribeToMessages();
-        }
         this._destroy.push(
           user(this.auth).subscribe(u => {
             this.user = u;
 
+            const lsKey = localStorage.getItem('key_' + this.friendEmail);
+            if (lsKey != null) {
+              this.key = JSON.parse(lsKey) as RsaBundle;
+              this.subscribeToMessages();
+            }
           })
         );
 
@@ -159,6 +159,21 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this.textArea!.nativeElement.focus();
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      const val = this.sendForm.get('text')!.value as string;
+      if (event.ctrlKey) {
+        this.sendForm.get('text')!.setValue(val + '\n');
+      } else {
+        if (val && val.length > 0) {
+          this.sendMessage();
+        }
+      }
+    }
+  }
+
   private getConvId() {
     return [this.user?.email || 'unknown', this.friendEmail || 'unknown'].sort().join('_');
   }
@@ -170,6 +185,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
           orderBy(`sentDate`, `asc`)
         ), { idField: 'id' }
       ).subscribe(msg => {
+        // decrypt
         this.messages = msg;
       })
     );

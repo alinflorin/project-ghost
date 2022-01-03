@@ -21,7 +21,11 @@
     </mat-card-header>
   </mat-card>
   <div *ngIf="key != null" fxFlex="1 1 auto" class="mh-0 oa">
-    messages
+    <mat-card *ngFor="let m of messages">
+      <mat-card-content>
+        <p>{{m.content}}</p>
+      </mat-card-content>
+    </mat-card>
   </div>
   <div *ngIf="key == null" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="center center" class="mh-0 oa">
     <form (submit)="saveKey()" fxLayout="column" fxLayoutAlign="flex-start center" [formGroup]="keyForm">
@@ -39,7 +43,7 @@
   </div>
   <form [formGroup]="sendForm" (submit)="sendMessage()" class="w-100" fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="flex-start center">
     <mat-form-field fxFlex="1 1 auto" appearance="outline" class="mff-p0">
-      <textarea #textArea matInput formControlName="text"></textarea>
+      <textarea (keydown)="onKeyDown($event)" #textArea matInput formControlName="text"></textarea>
     </mat-form-field>
     <button [disabled]="sendForm.get('text')!.value == null || sendForm.get('text')!.value === '' || key == null" mat-icon-button
       color="accent">
