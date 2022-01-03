@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
               this.hb();
               this.hbInterval = setInterval(() => {
-                this.hb(true);
+                this.hb();
               }, environment.hb);
 
             }
@@ -113,16 +113,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this._destroy.forEach(x => x.unsubscribe());
   }
 
-  private hb(interval = false) {
-    const data: any = interval ? {
-      lastSeen: this.disableLastSeen ? null : (serverTimestamp() as any)
-    } : {
+  private hb() {
+    setDoc<Profile>(doc(this.firestore, `profiles/${this.user!.email}`), {
       displayName: this.user!.displayName,
       email: this.user!.email,
       lastSeen: this.disableLastSeen ? null : (serverTimestamp() as any),
       photo: this.user!.photoURL
-    };
-    setDoc<Profile>(doc(this.firestore, `profiles/${this.user!.email}`), data, {
+    } as Partial<Profile>, {
       merge: true
     }).then();
   }
