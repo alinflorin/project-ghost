@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Auth, User, user } from '@angular/fire/auth';
-import { collection, collectionData, CollectionReference, doc, docData, Firestore, orderBy, query } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, docData, Firestore, orderBy, query, serverTimestamp, setDoc } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Profile } from '../models/profile';
 import { RsaBundle } from '../models/rsa-bundle';
-import { RsaMessageType } from '../models/rsa-worker-message';
+import { RsaMessageType, RsaWorkerMessage } from '../models/rsa-worker-message';
 import { RsaService } from '../services/rsa.service';
 import { ToastService } from '../shared/toast/services/toast.service';
 
@@ -26,7 +26,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
   user: User | null = null;
   messages: Message[] | undefined;
   key: RsaBundle | undefined;
-  isLoading = false;
 
   sendForm = new FormGroup({
     text: new FormControl()
@@ -36,6 +35,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
     key: new FormControl(undefined, [Validators.required]),
     persist: new FormControl(false)
   });
+
+  @ViewChild('textArea') textArea: ElementRef<HTMLTextAreaElement> | undefined;
 
   constructor(private actRoute: ActivatedRoute, private toastService: ToastService,
     private auth: Auth, private firestore: Firestore, private translateService: TranslateService,
@@ -53,6 +54,27 @@ export class ConversationComponent implements OnInit, OnDestroy {
                 localStorage.setItem('key_' + this.friendEmail, JSON.stringify(bundle));
               }
               this.key = bundle;
+              this.subscribeToMessages();
+              break;
+
+            case RsaMessageType.EncryptResponse:
+              const message = {
+                content: rsaMessage.data,
+                from: this.user!.email,
+                sentDate: (serverTimestamp() as any),
+                seenDate: null,
+                to: this.friendEmail!
+              } as Message;
+              from(
+                addDoc(collection(this.firestore, `conversations/${this.getConvId()}/messages`), message)
+              ).subscribe({
+                next: () => {
+                  // ignored
+                },
+                error: e => {
+                  this.toastService.fromFirebaseError(e);
+                }
+              });
               break;
           }
         },
@@ -68,6 +90,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
         const lsKey = localStorage.getItem('key_' + this.friendEmail);
         if (lsKey != null) {
           this.key = JSON.parse(lsKey) as RsaBundle;
+          this.subscribeToMessages();
         }
         this._destroy.push(
           user(this.auth).subscribe(u => {
@@ -100,7 +123,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   saveKey() {
-    this.isLoading = true;
     this.rsaService.send({
       type: RsaMessageType.GenerateKeyRequest,
       data: {
@@ -118,6 +140,23 @@ export class ConversationComponent implements OnInit, OnDestroy {
     }
     const now = new Date().getTime();
     return (now - this.friendProfile.lastSeen!.toDate().getTime()) < environment.hb;
+  }
+
+  sendMessage() {
+    const plainText = this.sendForm.value.text;
+    if (plainText == null || plainText.length === 0) {
+      return;
+    }
+    const workerMessage = {
+      type: RsaMessageType.EncryptRequest,
+      data: {
+        text: plainText,
+        bundle: this.key
+      }
+    } as RsaWorkerMessage;
+    this.rsaService.send(workerMessage);
+    this.sendForm.reset();
+    this.textArea!.nativeElement.focus();
   }
 
   private getConvId() {

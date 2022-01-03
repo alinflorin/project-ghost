@@ -37,11 +37,12 @@
       </button>
     </form>
   </div>
-  <form [formGroup]="sendForm" class="w-100" fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="flex-start center">
+  <form [formGroup]="sendForm" (submit)="sendMessage()" class="w-100" fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="flex-start center">
     <mat-form-field fxFlex="1 1 auto" appearance="outline" class="mff-p0">
-      <textarea matInput formControlName="text"></textarea>
+      <textarea #textArea matInput formControlName="text"></textarea>
     </mat-form-field>
-    <button [disabled]="sendForm.get('text')!.value == null || sendForm.get('text')!.value === ''" mat-icon-button color="accent">
+    <button [disabled]="sendForm.get('text')!.value == null || sendForm.get('text')!.value === '' || key == null" mat-icon-button
+      color="accent">
       <mat-icon>send</mat-icon>
     </button>
   </form>

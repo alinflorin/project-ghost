@@ -37,6 +37,18 @@ addEventListener('message', ({ data }) => {
         }
       };
       break;
+
+    case 2:
+      const rsaKey = api.privateKeyFromString(data.data.bundle.rsaKey);
+      const encoded = api.encrypt(data.data.text, data.data.bundle.publicKey, rsaKey);
+      if (encoded.status !== 'success') {
+        throw 'Encryption failed';
+      }
+      r = {
+        type: 3,
+        data: encoded.cipher
+      };
+      break;
     default:
       throw 'Unknown message';
   }
